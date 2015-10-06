@@ -1,0 +1,106 @@
+package pack1;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.*;
+
+public class TaskWindow extends JDialog implements ActionListener{
+
+	private JTextField description;
+
+	private JTextField deadline;
+
+	private JTextField important;
+
+	private JButton okButton;
+
+	private JButton cancelButton;
+
+	private boolean closeStatus;
+
+	public static final boolean OK = true;
+	public static final boolean CANCEL = false;
+
+	private Task task;
+
+	public TaskWindow(JFrame paOccupy, Task task) {
+		this.task = task;
+
+		setTitle("Create a new task");
+		closeStatus = CANCEL;
+		setSize(300,500);
+
+		//Prevent user from closing window
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+		//Instantiate and display text input boxes
+		JPanel textBoxes = new JPanel();
+		textBoxes.setLayout(new GridLayout(3,2));
+
+		textBoxes.add(new JLabel("Description of Task:"));
+		description = new JTextField("Do this",20);
+		textBoxes.add(description);
+
+		textBoxes.add(new JLabel("Deadline for the task:"));
+		deadline = new JTextField("3/11/2015",30);
+		textBoxes.add(deadline);
+
+		textBoxes.add(new JLabel("Is the task urgent?"));
+		important = new JTextField("Yes/No",30);
+		textBoxes.add(important);
+
+		getContentPane().add(textBoxes, BorderLayout.CENTER);
+
+		JPanel buttons = new JPanel();
+
+		okButton = new JButton("OK");
+		cancelButton = new JButton("Cancel");
+
+		buttons.add(okButton);
+		buttons.add(cancelButton);
+
+		okButton.addActionListener(this);
+		cancelButton.addActionListener(this);
+
+		setSize(300,500);
+		setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		//JButton button = (JButton) e.getSource();
+		//Fills the Site if OK is clicked
+		if(e.getSource() == okButton) {
+			closeStatus = OK;
+			SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
+			Date date;
+			
+			try {
+				date = fmt.parse(deadline.getText());
+				task.setTaskName(description.getText());
+				task.setDate(deadline.getText());
+				if(important.getText().toLowerCase().equals("yes"))
+					task.setImportant(true);
+				if(important.getText().toLowerCase().equals("no"))
+					task.setImportant(false);
+			}
+			catch ( ParseException exception ) {
+				exception.printStackTrace();
+			}
+		}
+
+		// Makes the dialog disappear, presumably if cancel
+		// is pressed
+		dispose();
+	}
+
+	public boolean getCloseStatus() {
+		return closeStatus;
+	}
+}
