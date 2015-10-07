@@ -72,7 +72,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 		
 		getContentPane().add(buttons, BorderLayout.SOUTH);
 
-		setSize(300,500);
+		setSize(300,200);
+		//pack();
 		setVisible(true);
 	}
 

@@ -2,10 +2,16 @@ package pack1;
 
 import java.io.*;
 import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
 
 public class TaskList extends AbstractTableModel{
 	
+	/**
+	 * Default serial number
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private ArrayList <Task> tasks;
 	
 	File file = new File ("taskList");
@@ -13,6 +19,9 @@ public class TaskList extends AbstractTableModel{
 	private String[] columnNames = {"Task", "Due Date",  "Urgent?", 
 			"Completed?"};
 	
+	/*
+	 * Automatically loads saved tasks from taskList file
+	 */
 	public TaskList() {
 		try {
 			load();
@@ -22,11 +31,17 @@ public class TaskList extends AbstractTableModel{
 		}
 	}
 	
+	/*
+	 * Adds task to arrayList of tasks
+	 */
 	public void add(Task task) {
 		tasks.add(task);
 		fireTableRowsInserted(0, tasks.size());
 	}
 	
+	/*
+	 * Deletes task from arrayList of tasks
+	 */
 	public void remove(Task task) {
 		tasks.remove(task);
 		fireTableRowsDeleted(0, tasks.size());
@@ -44,10 +59,17 @@ public class TaskList extends AbstractTableModel{
 		return this.tasks;
 	}
 	
+	/*
+	 * Deletes all tasks from arrayList
+	 */
 	public void clear() {
 		tasks.clear();
 	}
 	
+	/*
+	 * Saves contents of taskList to file as an arrayList of tasks to
+	 * be performed
+	 */
 	public void save() {
 		try {
 			file.delete();
@@ -60,6 +82,11 @@ public class TaskList extends AbstractTableModel{
 		}
 	}
 	
+	/*
+	 * Loads contents of file - should be serialized arrayList of 
+	 * tasks
+	 */
+	@SuppressWarnings("unchecked")
 	public void load() {
 		tasks = new ArrayList<Task>();
 		try {
@@ -82,7 +109,20 @@ public class TaskList extends AbstractTableModel{
 	public int getRowCount() {
 		return tasks.size();
 	}
+	
+	/*
+	 * Changes column headings to those in columnNames array
+	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+	 */
+	@Override
+	public String getColumnName(int col) {
+		return columnNames[col];
+	}
 
+	/*
+	 * Shows taskList values in table
+	 * @see javax.swing.table.TableModel#getValueAt(int, int)
+	 */
 	@Override
 	public Object getValueAt(int row, int col) {
 		switch (col) {
