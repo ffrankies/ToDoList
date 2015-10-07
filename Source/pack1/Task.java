@@ -14,6 +14,14 @@ public class Task implements Serializable{
 	private boolean important;
 	private boolean completed;
 	
+	public Task() {
+		super();
+		this.taskName = "Do this";
+		this.date = "01/01/2015";
+		this.important = false;
+		this.important = true;
+	}
+	
 	public Task(String taskName, String date, boolean important) {
 		super();
 		this.taskName = taskName;

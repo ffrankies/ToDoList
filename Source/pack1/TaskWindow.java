@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.swing.*;
 
 public class TaskWindow extends JDialog implements ActionListener{
+	
+	private TaskList list;
 
 	private JTextField description;
 
@@ -28,8 +30,9 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 	private Task task;
 
-	public TaskWindow(JFrame paOccupy, Task task) {
+	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
 		this.task = task;
+		this.list = list;
 
 		setTitle("Create a new task");
 		closeStatus = CANCEL;
@@ -66,6 +69,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
+		
+		getContentPane().add(buttons, BorderLayout.SOUTH);
 
 		setSize(300,500);
 		setVisible(true);
@@ -93,6 +98,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 			catch ( ParseException exception ) {
 				exception.printStackTrace();
 			}
+			
+			list.add(task);
 		}
 
 		// Makes the dialog disappear, presumably if cancel

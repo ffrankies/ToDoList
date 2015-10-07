@@ -68,7 +68,7 @@ public class TaskList extends AbstractTableModel{
 			tasks = (ArrayList <Task> ) is.readObject();
 			fireTableRowsInserted(0, tasks.size() - 1);
 			is.close();
-		} catch (Exception ex) {
+		} catch (Exception ex) {	//if no save file, create one
 			save();
 		}
 	}
