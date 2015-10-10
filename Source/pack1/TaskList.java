@@ -1,6 +1,7 @@
 package pack1;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
@@ -129,7 +130,10 @@ public class TaskList extends AbstractTableModel{
 		case 0: 
 			return tasks.get(row).getTaskName();
 		case 1:
-			return tasks.get(row).getDate();
+			//return tasks.get(row).getDate().getTime();
+			return DateFormat.getDateInstance(DateFormat.SHORT).format(
+					tasks.get(row).getDate().getTime());
+			//return "ABC";
 		case 2:
 			return tasks.get(row).isImportant();
 		case 3:

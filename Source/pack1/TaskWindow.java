@@ -7,10 +7,13 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 import javax.swing.*;
 
 public class TaskWindow extends JDialog implements ActionListener{
-	
+
 	private TaskList list;
 
 	private JTextField description;
@@ -29,11 +32,16 @@ public class TaskWindow extends JDialog implements ActionListener{
 	public static final boolean CANCEL = false;
 
 	private Task task;
+	
+	private SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
+	
 
 	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
 		this.task = task;
 		this.list = list;
-
+		
+		fmt.setLenient(false);
+		
 		setTitle("Create a new task");
 		closeStatus = CANCEL;
 		setSize(300,500);
@@ -50,7 +58,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 		textBoxes.add(description);
 
 		textBoxes.add(new JLabel("Deadline for the task:"));
-		deadline = new JTextField("3/11/2015",30);
+		GregorianCalendar cal = new GregorianCalendar(
+				TimeZone.getTimeZone("EST"));
+		Date date = cal.getTime();
+		deadline = new JTextField(fmt.format(date),30);
 		textBoxes.add(deadline);
 
 		textBoxes.add(new JLabel("Is the task urgent?"));
@@ -69,7 +80,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
-		
+
 		getContentPane().add(buttons, BorderLayout.SOUTH);
 
 		setSize(300,200);
@@ -84,13 +95,16 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Fills the Site if OK is clicked
 		if(e.getSource() == okButton) {
 			closeStatus = OK;
-			SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
 			Date date;
-			
+
 			try {
+				GregorianCalendar dueDate = new GregorianCalendar();
 				date = fmt.parse(deadline.getText());
-				task.setTaskName(description.getText());
-				task.setDate(deadline.getText());
+				dueDate.setTime(date);
+				task.setDate(dueDate);
+				//date = fmt.parse(deadline.getText());
+				//task.setTaskName(description.getText());
+				//task.setDate(deadline.getText());
 				if(important.getText().toLowerCase().equals("yes"))
 					task.setImportant(true);
 				if(important.getText().toLowerCase().equals("no"))
@@ -99,7 +113,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			catch ( ParseException exception ) {
 				exception.printStackTrace();
 			}
-			
+
 			list.add(task);
 		}
 

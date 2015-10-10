@@ -55,10 +55,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 		//Instantiating buttons
 		add = new JButton("Add");
 		add.addActionListener(this);
-		add.setMaximumSize(new Dimension(100,100));
+		//add.setMaximumSize(new Dimension(100,100));
 		close = new JButton("Close");
 		close.addActionListener(this);
-		add.setMaximumSize(new Dimension(100,100));
+		//add.setMaximumSize(new Dimension(100,100));
+		remove = new JButton("Remove");
+		remove.addActionListener(this);
 		
 		//Constraints for close button, to appear at top right corner
 		GridBagConstraints top = new GridBagConstraints();
@@ -95,8 +97,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 		buttons.gridy = 2;
 		buttons.anchor = GridBagConstraints.LAST_LINE_END;
 		add(add,buttons);
-		//buttons.gridx = 1;
-		//add(close,buttons);
+		buttons.gridx = 1;
+		add(remove,buttons);
 		
 		// Add mouse listener for this frame
         addMouseListener(new MouseAdapter(){
@@ -135,8 +137,13 @@ public class TaskGUI extends JFrame implements ActionListener {
 			TaskWindow window = new TaskWindow(this,task,model);
 			//model.add(task);
 		}
+		if(button == remove) {
+			Task task = model.getTask(table.getSelectedRow());
+			model.remove(task);
+		}
 		if(button == close)
 			System.exit(0);
+		
 	}
 	
 	public static void main(String[] args) {
