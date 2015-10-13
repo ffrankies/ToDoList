@@ -1,5 +1,6 @@
 package pack1;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -108,6 +109,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 		//add.setMaximumSize(new Dimension(100,100));
 		remove = new JButton("Remove");
 		remove.addActionListener(this);
+		edit = new JButton("Edit");
+		edit.addActionListener(this);
 
 		//Constraints for close button, to appear at top right corner
 		GridBagConstraints top = new GridBagConstraints();
@@ -140,6 +143,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 		add(add,buttons);
 		buttons.gridx = 1;
 		add(remove,buttons);
+		buttons.gridx = 0;
+		add(edit,buttons);
 
 		// Add mouse listener for this frame
 		addMouseListener(new MouseAdapter(){
@@ -165,8 +170,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 			}
 		});
 
+
 		setSize(450,170);
 		setUndecorated(true); //No menuBar on frame
+		setBackground(new Color(1,1,1,0.55f)); //Makes background translucent-white
 		setVisible(true);
 	}
 
@@ -181,6 +188,11 @@ public class TaskGUI extends JFrame implements ActionListener {
 		if(button == remove) {
 			Task task = model.getTask(table.getSelectedRow());
 			model.remove(task);
+		}
+		if(button == edit) {
+			Task task = model.getTask(table.getSelectedRow());
+			new TaskWindow(this,task,model);
+			//model.remove(task);
 		}
 		model.save();
 		if(button == close) 
