@@ -15,7 +15,7 @@ public class Task implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private String taskName;
-	//private String date;
+	private String description;
 	private GregorianCalendar dueDate;
 	private boolean important;
 	private boolean completed;
@@ -25,7 +25,7 @@ public class Task implements Serializable{
 	public Task() {
 		super();
 		this.taskName = "Do this";
-		//this.date = "01/01/2015";
+		this.description = "A description of the task";
 		this.dueDate = new GregorianCalendar(TimeZone.getTimeZone(
 				"EST"));
 		this.important = false;
@@ -33,34 +33,35 @@ public class Task implements Serializable{
 		fmt.setLenient(false);
 	}
 	
-	public Task(String taskName, String date, boolean important) {
-		super();
-		this.taskName = taskName;
-		fmt.setLenient(false);
-		this.dueDate = new GregorianCalendar();
-		try {
-			dueDate.setTime(fmt.parse(date));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.important = important;
-		this.completed = false;
-		
-	}
+//	public Task(String taskName, String date, boolean important) {
+//		super();
+//		this.taskName = taskName;
+//		fmt.setLenient(false);
+//		this.dueDate = new GregorianCalendar();
+//		try {
+//			dueDate.setTime(fmt.parse(date));
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		this.important = important;
+//		this.completed = false;
+//		
+//	}
 	
-	public Task(String taskName, Date date, boolean important) {
-		super();
-		this.taskName = taskName;
-		this.dueDate.setTime(date);
-		this.important = important;
-		this.completed = false;
-		fmt.setLenient(false);
-	}
+//	public Task(String taskName, Date date, boolean important) {
+//		super();
+//		this.taskName = taskName;
+//		this.dueDate.setTime(date);
+//		this.important = important;
+//		this.completed = false;
+//		fmt.setLenient(false);
+//	}
 	
 	public String toString() {
-		return taskName + "|" + fmt.format(dueDate.getTime()) + "|" + 
-				important; 
+		return taskName + "|" + description + "|" + 
+				fmt.format(dueDate.getTime()) + "|" + important + "|" 
+				+ completed; 
 	}
 	
 	public boolean equals(Task other) {
@@ -132,5 +133,19 @@ public class Task implements Serializable{
 	 */
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
+	}
+	
+	/*
+	 * 
+	 */
+	public String getDescription() {
+		return description;
+	}
+	
+	/*
+	 * 
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

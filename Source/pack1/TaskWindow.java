@@ -19,11 +19,13 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 	private TaskList list;
 
-	private JTextField description;
+	private JTextField name;
 
 	private JTextField deadline;
 
 	private JTextField important;
+	
+	private JTextField description;
 
 	private JButton okButton;
 
@@ -59,10 +61,14 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Instantiate and display text input boxes
 		JPanel textBoxes = new JPanel();
 		textBoxes.setBackground(new Color(1,1,1,0.55f));
-		textBoxes.setLayout(new GridLayout(3,2));
+		textBoxes.setLayout(new GridLayout(4,2));
 
-		textBoxes.add(new JLabel("Description of Task:"));
-		description = new JTextField(task.getTaskName(),20);
+		textBoxes.add(new JLabel("Short description of Task:"));
+		name = new JTextField(task.getTaskName(),20);
+		textBoxes.add(name);
+		
+		textBoxes.add(new JLabel("Detailed description of Task:"));
+		description = new JTextField(task.getDescription(),20);
 		textBoxes.add(description);
 
 		textBoxes.add(new JLabel("Deadline for the task:"));
@@ -152,7 +158,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 				dueDate.setTime(date);
 				task.setDate(dueDate);
 				//date = fmt.parse(deadline.getText());
-				task.setTaskName(description.getText());
+				task.setTaskName(name.getText());
+				task.setDescription(description.getText());
 				//task.setDate(deadline.getText());
 				if(important.getText().toLowerCase().equals("yes"))
 					task.setImportant(true);

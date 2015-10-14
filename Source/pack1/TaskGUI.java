@@ -9,11 +9,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -43,10 +45,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 	/* Used to allow GUI to be dragged about screen */
 	private int pX, pY;
-	
+
 	protected String[] columnToolTips = {"A description of the task.",
 			"The due date for the task.", "Is this task urgent?", 
-			"Check this box once you have completed the task."};
+	"Check this box once you have completed the task."};
 
 	public TaskGUI() {
 
@@ -60,38 +62,69 @@ public class TaskGUI extends JFrame implements ActionListener {
 			//Implements tooltips when a cell is moused over
 			public String getToolTipText(MouseEvent e) {
 				//String tip = null;
-                java.awt.Point p = e.getPoint();
-                int index = columnModel.getColumnIndexAtX(p.x);
-                int realIndex = 
-                		columnModel.getColumn(index).getModelIndex();
-                return columnToolTips[realIndex];
-            }
+				java.awt.Point p = e.getPoint();
+				//                int index = columnModel.getColumnIndexAtX(p.x);
+				//                int realIndex = 
+				//                		columnModel.getColumn(index).getModelIndex();
+				//                return columnToolTips[realIndex];
+				int rowIndex = rowAtPoint(p);
+				int colIndex = columnAtPoint(p);
+				int realColIndex = columnModel.getColumn(colIndex).getModelIndex();
+				if(realColIndex == 0)
+					return model.getTask(rowIndex).getDescription();
+				else
+					return columnToolTips[realColIndex];
+			}
 
-            //Implement table header tool tips. 
-            protected JTableHeader createDefaultTableHeader() {
-                return new JTableHeader(columnModel) {
-                    /**
+			//Implement table header tool tips. 
+			protected JTableHeader createDefaultTableHeader() {
+				return new JTableHeader(columnModel) {
+					/**
 					 * 
 					 */
 					private static final long serialVersionUID = 1L;
 
 					public String getToolTipText(MouseEvent e) {
-                       // String tip = null;
-                        java.awt.Point p = e.getPoint();
-                        int index = columnModel.getColumnIndexAtX(p.x);
-                        int realIndex = 
-                        		columnModel.getColumn(
-                        				index).getModelIndex();
-                        return columnToolTips[realIndex];
-                    }
-                };
-            }
+						// String tip = null;
+						java.awt.Point p = e.getPoint();
+						int index = columnModel.getColumnIndexAtX(p.x);
+						int realIndex = 
+								columnModel.getColumn(
+										index).getModelIndex();
+						return columnToolTips[realIndex];
+					}
+					
+				};
+			}
 		};
 		table.setShowGrid(false);
 		table.setBorder(null);
+		table.setOpaque(false);
+		table.getTableHeader().setBackground(new Color(1,1,1,0f));
+		
+		//table.setIntercellSpacing(new Dimension(0,0));
+		//table.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
+		//table.getTableHeader().setOpaque(false);
+		//table.setGridColor(new Color(1,1,1,0.55f));
+		//table.set
+		table.setBackground(new Color(1,1,1,0f));
+		table.setSelectionBackground(new Color(1,1,1,0.3f));
+		table.setFocusable(false);
+		//table.setD
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		table.setOpaque(false);
 
+		table.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				repaint();
+			}
+		});
+		
 		//table.setSize(new Dimension(250,250));
 		scrollPane = new JScrollPane(table);
+		scrollPane.getViewport().setBackground(new Color(1,1,1,0f));
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		scrollPane.setBackground(new Color(1,1,1,0.55f));
 		//scrollPane.setMaximumSize(new Dimension(250,250));
 		//panel = new JPanel();
 
@@ -146,6 +179,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 		buttons.gridx = 0;
 		add(edit,buttons);
 
+		scrollPane.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				table.clearSelection();
+				repaint();
+			}
+		});
 		// Add mouse listener for this frame
 		addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent me)
@@ -153,6 +192,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 				// Get x,y and store them
 				pX=me.getX();
 				pY=me.getY();
+//				table.clearSelection();
+//				repaint();
 			}
 		});
 
