@@ -3,6 +3,7 @@ package pack1;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -14,21 +15,49 @@ import java.util.TimeZone;
 public class Task implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
+	
+	/** A short description of the task */
 	private String taskName;
+	
+	/** A detailed description of the task */
 	private String description;
+	
+	/** The due date for the task */
 	private GregorianCalendar dueDate;
+	
+	/** Whether or not the task is urgent. Possibly unneeded */
 	private boolean important;
+	
+	/** Whether or not the task has been completed */
 	private boolean completed;
-	SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
 	
+	/** The type of repetition the task has */
+	private Repeat rep;
 	
+	/** Stores the particular days of the week on which the task 
+	 * repeats */
+	private ArrayList<String> weekdays;
+	
+	/** Stores the number of days between the due dates for the task */
+	private int daysBetween;
+	
+	/** A formatter for the date of the task */
+	private final SimpleDateFormat fmt = 
+			new SimpleDateFormat("MM/dd/yyyy");
+	
+	/**
+	 * Default constructor sets all values to defaults
+	 */
 	public Task() {
 		super();
 		this.taskName = "Do this";
 		this.description = "A description of the task";
 		this.dueDate = new GregorianCalendar(TimeZone.getTimeZone(
 				"EST"));
-		this.important = false;
+		this.rep = Repeat.NONE;
+		this.weekdays = new ArrayList<String>();
+		this.daysBetween = 0;
+		this.completed = false;
 		this.important = true;
 		fmt.setLenient(false);
 	}
@@ -58,12 +87,28 @@ public class Task implements Serializable{
 //		fmt.setLenient(false);
 //	}
 	
+	/**
+	 * Converts the task to a readable string
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
-		return taskName + "|" + description + "|" + 
-				fmt.format(dueDate.getTime()) + "|" + important + "|" 
-				+ completed; 
+		String str = taskName + "|" + description + "|" + 
+				fmt.format(dueDate.getTime()) + "|";
+		if(rep == Repeat.NUMDAY) {
+			str += daysBetween + "|";
+		}
+		if(rep == Repeat.SPDAY) {
+			for(String day: weekdays) {
+				str += day + "|";
+			}
+		}
+		str += important + "|" + completed; 
+		return str;
 	}
 	
+	/**
+	 * Checks if a task is the same as another task
+	 */
 	public boolean equals(Task other) {
 		return this.taskName.equals(other.taskName) && 
 				this.dueDate.getTime().equals(other.dueDate.getTime()) 
@@ -88,7 +133,6 @@ public class Task implements Serializable{
 	 * @return the date
 	 */
 	public GregorianCalendar getDate() {
-		//return date;
 		return dueDate;
 	}
 
@@ -147,5 +191,29 @@ public class Task implements Serializable{
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public Repeat getRepeat() {
+		return this.rep;
+	}
+	
+	public void setRepeat(Repeat rep) {
+		this.rep = rep;
+	}
+	
+	public ArrayList<String> getWeekdays() {
+		return this.weekdays;
+	}
+	
+	public void setWeekdays(ArrayList<String> weekdays) {
+		this.weekdays = weekdays;
+	}
+	
+	public int getDaysBetween() {
+		return this.daysBetween;
+	}
+	
+	public void setDaysBetween(int daysBetween) {
+		this.daysBetween = daysBetween;
 	}
 }

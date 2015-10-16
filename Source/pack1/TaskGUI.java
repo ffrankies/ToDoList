@@ -110,10 +110,11 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setBackground(new Color(1,1,1,0f));
 		table.setSelectionBackground(new Color(1,1,1,0.3f));
 		table.setFocusable(false);
-		//table.setD
+		
+		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		table.setOpaque(false);
 
+		/* Prevents opacity from building up on each click */
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
 				repaint();
@@ -132,7 +133,6 @@ public class TaskGUI extends JFrame implements ActionListener {
 		 *It was chosen because the buttons need to be small, with 
 		 *a table covering most of the JFrame area */
 		setLayout(new GridBagLayout());
-
 		//Instantiating buttons
 		add = new JButton("Add");
 		add.addActionListener(this);
