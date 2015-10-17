@@ -54,14 +54,14 @@ implements ListCellRenderer {
     public Component getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
 
-//        if (cellHasFocus)
-//        {
-//            text.setBackground(select);
-//        }
-//        else
-//        {
-//            text.setBackground(trans);
-//        }
+        if (isSelected)
+        {
+            text.setBackground(select);
+        }
+        else
+        {
+            text.setBackground(trans);
+        }
 
 //        if (colors.length != strings.length)
 //        {
