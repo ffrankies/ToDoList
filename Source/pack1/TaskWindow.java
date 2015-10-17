@@ -3,18 +3,24 @@ package pack1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 
 public class TaskWindow extends JDialog implements ActionListener{
@@ -75,69 +81,43 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Creates the transparent panel
 		JPanel textBoxes = new JPanel();
 		textBoxes.setBackground(bckg);
-		textBoxes.setLayout(new GridLayout(5,2));
+		textBoxes.setLayout(new GridLayout(6,1));
 		textBoxes.setOpaque(false);
 		
 		//Instantiate text input boxes
 		//Instantiates the taskName textfield
-		textBoxes.add(new JLabel("Description:"));
-		name = new JTextField(task.getTaskName(),20);
-		name.setBackground(trans);
-		name.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				repaint();
-			}
-		});
-		textBoxes.add(name);
+		JPanel namePanel = new JPanel();
+		namePanel.add(new JLabel("Description:"));
+		namePanel.setOpaque(false);
+		name = new JTextField(task.getTaskName(),15);
+		setupTextField(name);
+		namePanel.add(name);
+		textBoxes.add(namePanel);
 		
 		//Instantiates the description textfield
-		textBoxes.add(new JLabel("Details:"));
+		JPanel descPanel = new JPanel();
+		descPanel.add(new JLabel("Details:"));
+		descPanel.setOpaque(false);
 		description = new JTextField(task.getDescription(),20);
-		description.setBackground(trans);
-		description.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				repaint();
-			}
-		});
-		textBoxes.add(description);
+		setupTextField(description);
+		descPanel.add(description);
+		textBoxes.add(descPanel);
 
 		//Instantiates the repeat textfield
-		textBoxes.add(new JLabel("Repeat:"));
-		String[] options = {"None", "Every x days", "Specific Days"};
-		repeatType = new JComboBox<String>(options);
-		//repeatType.setUI(new BasicComboBoxUI());
-		repeatType.setBackground(trans);
-		repeatType.setFocusable(false);
-		
-//		repeatType.setOpaque(false);
-		ComboBoxRenderer renderer = new ComboBoxRenderer(repeatType);
-		repeatType.setRenderer(renderer);
-		
-		//This did nothing
-//		repeatType.addMouseMotionListener(new MouseAdapter(){
-//			public void mouseDragged(MouseEvent me)
-//			{
-//				// Set the location
-//				// get the current location x-co-ordinate and then get
-//				// the current drag x co-ordinate, add them and subtract 
-//				// most recent mouse pressed x co-ordinate
-//				// do same for y co-ordinate
-//				repaint();
-//			}
-//		});
-//		for (int i = 0; i < repeatType.getComponentCount(); i++) 
-//		{
-//		    if (repeatType.getComponent(i) instanceof JComponent) {
-//		        ((JComponent) repeatType.getComponent(i)).setBorder(new EmptyBorder(0, 0,0,0));
-//		    }
-//
-//
-//		    if (repeatType.getComponent(i) instanceof AbstractButton) {
-//		        ((AbstractButton) repeatType.getComponent(i)).setBorderPainted(false);
-//		    }
-//		}
-		//repeatType.setBorder(BorderFactory.createEmptyBorder());
-		textBoxes.add(repeatType);
+		//textBoxes.add(new JLabel("Repeat:"));
+		ArrayList<String> options = new ArrayList();
+		options.add("None");
+		options.add("Every x days");
+		options.add("Specific days");//{"None", "Every x days", "Specific Days"};
+		MyChooser<String> repeatType = new MyChooser<String>(options);
+		JPanel reptPanel = new JPanel();
+		reptPanel.add(new JLabel("Repeat:"));
+		reptPanel.add(repeatType);
+		//reptPanel.setAlignmentY(CENTER_ALIGNMENT);
+		reptPanel.setOpaque(false);
+//		Box box = new Box(BoxLayout.Y_AXIS);
+//		box.add(repeatType);
+		textBoxes.add(reptPanel);
 		//Instantiates the deadline textfield
 		textBoxes.add(new JLabel("Deadline for the task:"));
 		//		GregorianCalendar cal = new GregorianCalendar(
@@ -156,21 +136,19 @@ public class TaskWindow extends JDialog implements ActionListener{
 		});
 		textBoxes.add(deadline);
 
-		textBoxes.add(new JLabel("Is the task urgent?"));
+		JPanel impPanel = new JPanel();
+		impPanel.add(new JLabel("Is the task urgent?"));
+		impPanel.setOpaque(false);
 		//important = new JTextField("Yes/No",30);
 		String imp;
 		if(task.isImportant())
 			imp = "Yes";
 		else
 			imp = "No";
-		important = new JTextField(imp);
-		important.setBackground(trans);
-		important.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				repaint();
-			}
-		});
-		textBoxes.add(important);
+		important = new JTextField(imp,10);
+		setupTextField(important);
+		impPanel.add(important);
+		textBoxes.add(impPanel);
 
 		getContentPane().add(textBoxes, BorderLayout.CENTER);
 
@@ -270,5 +248,50 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 	public boolean getCloseStatus() {
 		return closeStatus;
+	}
+	
+	public void setupTextField(JTextField field) {
+		field.setBackground(trans);
+		field.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				repaint();
+			}
+		});
+		field.getDocument().addDocumentListener(new DocumentListener() {
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				repaint();
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				repaint();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				repaint();
+			}
+			
+		});
+		field.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				repaint();
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				repaint();
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				repaint();
+			}
+			
+		});
 	}
 }
