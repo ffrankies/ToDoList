@@ -20,7 +20,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 public class TaskWindow extends JDialog implements ActionListener{
 
 	private TaskList list;
-	
+
 	//private DateComboBox dateChooser;
 
 	private JTextField name;
@@ -28,17 +28,17 @@ public class TaskWindow extends JDialog implements ActionListener{
 	private JTextField deadline;
 
 	private JTextField important;
-	
+
 	private JTextField description;
 
 	private JButton okButton;
 
 	private JComboBox<String> repeatType;
-	
+
 	private JButton cancelButton;
 
 	private boolean closeStatus;
-	
+
 	private final Color bckg = new Color(1,1,1,0.55f);
 	private final Color trans = new Color(1,1,1,0f);
 	private final Color select = new Color(1,1,1,0.3f);
@@ -47,7 +47,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 	public static final boolean CANCEL = false;
 
 	private Task task;
-	
+
 	private JPanel noneP, numdayP, weekdayP;
 
 	private SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
@@ -62,8 +62,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 		this.list = list;
 
 		fmt.setLenient(false);
-//		bckg = new Color(1,1,1,0.55f);
-//		trans = new Color(1,1,1,0f);
+		//		bckg = new Color(1,1,1,0.55f);
+		//		trans = new Color(1,1,1,0f);
 
 		setTitle("Create a new task");
 		closeStatus = CANCEL;
@@ -77,7 +77,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		textBoxes.setBackground(bckg);
 		textBoxes.setLayout(new GridLayout(5,2));
 		textBoxes.setOpaque(false);
-		
+
 		//Instantiate text input boxes
 		//Instantiates the taskName textfield
 		textBoxes.add(new JLabel("Description:"));
@@ -89,7 +89,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			}
 		});
 		textBoxes.add(name);
-		
+
 		//Instantiates the description textfield
 		textBoxes.add(new JLabel("Details:"));
 		description = new JTextField(task.getDescription(),20);
@@ -104,40 +104,66 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Instantiates the repeat textfield
 		textBoxes.add(new JLabel("Repeat:"));
 		String[] options = {"None", "Every x days", "Specific Days"};
-		repeatType = new JComboBox<String>(options);
+		SpinnerListModel monthModel = 
+				new CyclingSpinnerListModel(options);
+		JSpinner spinner = new JSpinner(monthModel);
+		spinner.setOpaque(false);
+		((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setOpaque(false);
+		spinner.setBackground(trans);
+//		for (int i = 0; i < spinner.getComponentCount(); i++) 
+//			((JComponent) spinner.getComponent(i)).setBackground(trans);
+		//repeatType = new JComboBox<String>(options);
 		//repeatType.setUI(new BasicComboBoxUI());
-		repeatType.setBackground(trans);
-		repeatType.setFocusable(false);
-		
-//		repeatType.setOpaque(false);
-		ComboBoxRenderer renderer = new ComboBoxRenderer(repeatType);
-		repeatType.setRenderer(renderer);
-		
+		//repeatType.setBackground(bckg);
+		//repeatType.setOpaque(false);
+		//repeatType.setFocusable(false);
+		//repeatType.getComponentPopupMenu().setBackground(bckg);
+
+		//		repeatType.setOpaque(false);
+		//ComboBoxRenderer renderer = new ComboBoxRenderer(repeatType);
+		//repeatType.setRenderer(renderer);
+
 		//This did nothing
-//		repeatType.addMouseMotionListener(new MouseAdapter(){
-//			public void mouseDragged(MouseEvent me)
-//			{
-//				// Set the location
-//				// get the current location x-co-ordinate and then get
-//				// the current drag x co-ordinate, add them and subtract 
-//				// most recent mouse pressed x co-ordinate
-//				// do same for y co-ordinate
-//				repaint();
-//			}
-//		});
-//		for (int i = 0; i < repeatType.getComponentCount(); i++) 
-//		{
-//		    if (repeatType.getComponent(i) instanceof JComponent) {
-//		        ((JComponent) repeatType.getComponent(i)).setBorder(new EmptyBorder(0, 0,0,0));
-//		    }
-//
-//
-//		    if (repeatType.getComponent(i) instanceof AbstractButton) {
-//		        ((AbstractButton) repeatType.getComponent(i)).setBorderPainted(false);
-//		    }
-//		}
+		//		repeatType.addMouseMotionListener(new MouseAdapter(){
+		//			public void mouseMoved(MouseEvent me)
+		//			{
+		//				// Set the location
+		//				// get the current location x-co-ordinate and then get
+		//				// the current drag x co-ordinate, add them and subtract 
+		//				// most recent mouse pressed x co-ordinate
+		//				// do same for y co-ordinate
+		//				repaint();
+		//			}
+		//		});
+		//		for (int i = 0; i < repeatType.getComponentCount(); i++) 
+		//		{
+		//		    if (repeatType.getComponent(i) instanceof JComponent) {
+		//		        ((JComponent) repeatType.getComponent(i)).setBorder(new EmptyBorder(0, 0,0,0));
+		//		    }
+		//
+		//
+		//		    if (repeatType.getComponent(i) instanceof AbstractButton) {
+		//		        ((AbstractButton) repeatType.getComponent(i)).setBorderPainted(false);
+		//		    }
+		//		}
 		//repeatType.setBorder(BorderFactory.createEmptyBorder());
-		textBoxes.add(repeatType);
+		//textBoxes.add(new AlphaContainer(repeatType));
+
+		//		final JPopupMenu repeats = new JPopupMenu();
+		//		repeats.add("None");
+		//		repeats.add("Every x Days");
+		//		repeats.add("Specific Days");
+		//		JTextField repeatLabel = new JTextField("",20);
+		//		repeats.setBackground(trans);
+		//		repeats.setOpaque(false);
+		//		repeatLabel.setEditable(false);
+		//		repeatLabel.addMouseListener(new MouseAdapter() {
+		//			public void mousePressed(MouseEvent me) {
+		//				repeats.show(me.getComponent(), 0, me.getComponent().getHeight());
+		//			}
+		//		});
+
+		textBoxes.add(spinner);
 		//Instantiates the deadline textfield
 		textBoxes.add(new JLabel("Deadline for the task:"));
 		//		GregorianCalendar cal = new GregorianCalendar(
@@ -225,10 +251,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 		//JButton button = (JButton) e.getSource();
 		//Fills the Site if OK is clicked
-//		if(e.getSource() == choose) {
-//			dateChooser = new DateComboBox(fmt);
-//			dateChooser.
-//		}
+		//		if(e.getSource() == choose) {
+		//			dateChooser = new DateComboBox(fmt);
+		//			dateChooser.
+		//		}
 		if(e.getSource() == okButton) {
 			closeStatus = OK;
 
