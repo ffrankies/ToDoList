@@ -50,8 +50,8 @@ public class Task implements Serializable{
 	 */
 	public Task() {
 		super();
-		this.taskName = "Do this";
-		this.description = "A description of the task";
+		this.taskName = "Short task description";
+		this.description = "Detailed description here";
 		this.dueDate = new GregorianCalendar(TimeZone.getTimeZone(
 				"EST"));
 		this.rep = Repeat.NONE;
