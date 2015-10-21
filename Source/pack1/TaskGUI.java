@@ -236,6 +236,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 			//model.remove(task);
 		}
 		model.save();
+		repaint();
 		if(button == close) 
 			System.exit(0);
 

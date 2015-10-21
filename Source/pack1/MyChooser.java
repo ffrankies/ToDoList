@@ -174,4 +174,17 @@ public class MyChooser extends JPanel { //implements ActionListener {
 	public JButton getRight() {
 		return right;
 	}
+	
+	public void changeMax(int max) {
+		int selection = getNum();
+		this.nums = new ArrayList<Integer>();
+		for(int i = 1; i <= max; i++) {
+			nums.add(i);
+		}
+		if(selection > max) {
+			selection = max;
+			index = nums.indexOf(max);
+			setText(max);
+		}
+	}
 }

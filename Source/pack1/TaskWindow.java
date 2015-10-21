@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.*;
@@ -22,7 +23,7 @@ import javax.swing.text.AbstractDocument;
 public class TaskWindow extends JDialog implements ActionListener{
 
 	private TaskList list;
-	
+
 	//private DateComboBox dateChooser;
 
 	private JTextField name;
@@ -30,15 +31,15 @@ public class TaskWindow extends JDialog implements ActionListener{
 	private JTextField deadline;
 
 	private JTextField important;
-	
+
 	private JTextArea details;
 
 	private JButton okButton;
-	
+
 	private JButton cancelButton;
 
 	private boolean closeStatus;
-	
+
 	private final Color bckg = new Color(1,1,1,0.55f);
 	private final Color trans = new Color(1,1,1,0f);
 	private final Color select = new Color(0,0,0,0.4f);
@@ -47,7 +48,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 	public static final boolean CANCEL = false;
 
 	private Task task;
-	
+
 	private JPanel chooserP, textBoxes, dLine, noneP, numdayP, weekdayP;
 
 	private SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
@@ -55,18 +56,18 @@ public class TaskWindow extends JDialog implements ActionListener{
 	protected int pX;
 
 	protected int pY;
-	
+
 	private MyChooser repeatType, dd, mm, yyyy, days;
-	
+
 	private JRadioButton[] buttons;
-	
+
 	private ArrayList<String> options;
-	
+
 	private Date date;
-	
+
 	private String[] daysStrs;
-	
-	private Calendar cal;
+
+	private GregorianCalendar cal;
 
 
 	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
@@ -74,8 +75,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 		this.list = list;
 
 		fmt.setLenient(false);
-//		bckg = new Color(1,1,1,0.55f);
-//		trans = new Color(1,1,1,0f);
+		//		bckg = new Color(1,1,1,0.55f);
+		//		trans = new Color(1,1,1,0f);
 
 		setTitle("Create a new task");
 		closeStatus = CANCEL;
@@ -83,7 +84,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 		//Prevent user from closing window
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			
+
 		//Creates the transparent panel
 		textBoxes = new JPanel();
 		textBoxes.setBackground(bckg);
@@ -91,11 +92,11 @@ public class TaskWindow extends JDialog implements ActionListener{
 				new EmptyBorder(5, 5, 5, 5), 
 				new JTextField().getBorder()));
 		//textBoxes.set
-		
+
 		//textBoxes.setLayout(new GridLayout(6,1));
 		textBoxes.setLayout(new BoxLayout(textBoxes, BoxLayout.Y_AXIS));
 		textBoxes.setOpaque(false);
-		
+
 		//Adds title to taskWindow
 		JPanel title = new JPanel();
 		title.setOpaque(false);
@@ -104,9 +105,9 @@ public class TaskWindow extends JDialog implements ActionListener{
 		else
 			title.add(new JLabel("Create New Task", JLabel.CENTER));
 		textBoxes.add(title);
-		
+
 		textBoxes.add(new JSeparator());
-		
+
 		//Instantiate user input boxes
 		//Instantiates the taskName textfield
 		JPanel namePanel = new JPanel();
@@ -118,7 +119,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		setupTextField(name);
 		namePanel.add(name);
 		textBoxes.add(namePanel);
-		
+
 		//Instantiates the description textfield
 		JPanel descPanel = new JPanel();
 		descPanel.add(new JLabel("Details:"));
@@ -129,7 +130,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		textBoxes.add(descPanel);
 
 		textBoxes.add(new JSeparator());
-		
+
 		JPanel impPanel = new JPanel();
 		impPanel.add(new JLabel("Is the task urgent?"));
 		impPanel.setOpaque(false);
@@ -143,7 +144,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		setupTextField(important);
 		impPanel.add(important);
 		textBoxes.add(impPanel);
-		
+
 		//Instantiates the repeat textfield
 		options = new ArrayList<String>();
 		//{"None", "Every x days", "Specific Days"};
@@ -158,24 +159,24 @@ public class TaskWindow extends JDialog implements ActionListener{
 		reptPanel.add(repeatType);
 		reptPanel.setOpaque(false);
 		textBoxes.add(reptPanel);
-		
+
 		//Instantiates the deadline textfield
-//		textBoxes.add(new JLabel("Deadline for the task:"));
-//		//		GregorianCalendar cal = new GregorianCalendar(
-//		//				TimeZone.getTimeZone("EST"));
-//		//		Date date = cal.getTime();
-//		Date date = task.getDate().getTime();
-//		//choose = new JButton(fmt.format(date));
-//		//dateChooser = new DateComboBox(fmt);
-//		//choose.addActionListener(this);
-//		deadline = new JTextField(fmt.format(date),30);
-//		deadline.setBackground(trans);
-//		deadline.addMouseListener(new MouseAdapter() {
-//			public void mousePressed(MouseEvent me) {
-//				repaint();
-//			}
-//		});
-//		textBoxes.add(deadline);
+		//		textBoxes.add(new JLabel("Deadline for the task:"));
+		//		//		GregorianCalendar cal = new GregorianCalendar(
+		//		//				TimeZone.getTimeZone("EST"));
+		//		//		Date date = cal.getTime();
+		//		Date date = task.getDate().getTime();
+		//		//choose = new JButton(fmt.format(date));
+		//		//dateChooser = new DateComboBox(fmt);
+		//		//choose.addActionListener(this);
+		//		deadline = new JTextField(fmt.format(date),30);
+		//		deadline.setBackground(trans);
+		//		deadline.addMouseListener(new MouseAdapter() {
+		//			public void mousePressed(MouseEvent me) {
+		//				repaint();
+		//			}
+		//		});
+		//		textBoxes.add(deadline);
 		date = task.getDate().getTime();
 		cal = task.getDate();
 		setupChooserP();
@@ -185,7 +186,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		dLine = noneP;
 		textBoxes.add(dLine);
 
-		
+
 
 		getContentPane().add(textBoxes, BorderLayout.CENTER);
 
@@ -240,10 +241,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 		//JButton button = (JButton) e.getSource();
 		//Fills the Site if OK is clicked
-//		if(e.getSource() == choose) {
-//			dateChooser = new DateComboBox(fmt);
-//			dateChooser.
-//		}
+		//		if(e.getSource() == choose) {
+		//			dateChooser = new DateComboBox(fmt);
+		//			dateChooser.
+		//		}
 		//Changes panel for choosing deadline depending on repeatType
 		if(e.getSource() == repeatType.getLeft())
 			repeatType.prev();
@@ -275,14 +276,22 @@ public class TaskWindow extends JDialog implements ActionListener{
 			dd.prev();
 		if(e.getSource() == dd.getRight())
 			dd.next();
-		if(e.getSource() == mm.getLeft())
+		if(e.getSource() == mm.getLeft()) {
 			mm.prev();
-		if(e.getSource() == mm.getRight())
+			maxDay();
+		}
+		if(e.getSource() == mm.getRight()) {
 			mm.next();
-		if(e.getSource() == yyyy.getLeft())
+			maxDay();
+		}
+		if(e.getSource() == yyyy.getLeft()) {
 			yyyy.prev();
-		if(e.getSource() == yyyy.getRight())
+			maxDay();
+		}
+		if(e.getSource() == yyyy.getRight()) {
 			yyyy.next();
+			maxDay();
+		}
 		if(e.getSource() == okButton) {
 			closeStatus = OK;
 
@@ -292,28 +301,54 @@ public class TaskWindow extends JDialog implements ActionListener{
 			if(list.getTasks().contains(task))
 				list.remove(task);
 
-			Date date;
+			//Date date;
 
-			try {
-				GregorianCalendar dueDate = new GregorianCalendar();
-				date = fmt.parse(deadline.getText());
-				dueDate.setTime(date);
-				task.setDate(dueDate);
-				//date = fmt.parse(deadline.getText());
+			//try {
 				task.setTaskName(name.getText());
 				task.setDescription(details.getText());
-				//task.setDate(deadline.getText());
 				if(important.getText().toLowerCase().equals("yes"))
 					task.setImportant(true);
-				if(important.getText().toLowerCase().equals("no"))
-					task.setImportant(false);
-			}
-			catch ( ParseException exception ) {
-				exception.printStackTrace();
-			}
+				else
+					if(important.getText().toLowerCase().equals("no"))
+						task.setImportant(false);
+				String repeat = repeatType.getText();
+				GregorianCalendar dueDate = new GregorianCalendar();
+				if(repeat.equals("None")) {
+					task.setRepeat(Repeat.NONE);
+					dueDate.set(yyyy.getNum(), mm.getNum()-1, 
+							dd.getNum());
+					task.setDate(dueDate);
+				}
+				else
+					if(repeat.equals("Every x days")) {
+						task.setRepeat(Repeat.NUMDAY);
+						dueDate.set(yyyy.getNum(), mm.getNum()-1, 
+								dd.getNum());
+						task.setDate(dueDate);
+						task.setDaysBetween(days.getNum());
+					}
+					else
+						if(repeat.equals("Specific days")) {
+							//doNothing
+						}
+//				date = fmt.parse(deadline.getText());
+//				dueDate.setTime(date);
+//				task.setDate(dueDate);
+//				dueDate.set(year, month, date);
+				//date = fmt.parse(deadline.getText());
+
+				//task.setDate(deadline.getText());
+				
+			//}
+//			catch ( ParseException exception ) {
+//				exception.printStackTrace();
+//			}
 
 			//Adds edited/newly created task to list
 			list.add(task);
+			//getParent().repaint();
+			//paOccupy.repaint();
+			dispose();
 		}
 
 		// Makes the dialog disappear, presumably if cancel
@@ -321,17 +356,17 @@ public class TaskWindow extends JDialog implements ActionListener{
 		if(e.getSource() == cancelButton)
 			dispose();
 	}
-	
+
 	private void setupNoneP() {
 		noneP = new JPanel();
 		noneP.setOpaque(false);
 		noneP.setLayout(new BoxLayout(noneP, BoxLayout.Y_AXIS));
-		
+
 		JPanel labelP = new JPanel();
 		labelP.setOpaque(false);
 		labelP.add(new JLabel("Due date:", JLabel.CENTER));
 		noneP.add(labelP);
-		
+
 		//setupChooserP();
 		noneP.add(chooserP);
 		//noneP.setVisible(true);
@@ -344,14 +379,21 @@ public class TaskWindow extends JDialog implements ActionListener{
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		chooserP.add(new JLabel("Month", JLabel.CENTER),c);
+		Border space = new EmptyBorder(0,10,0,10);
+		JLabel month = new JLabel("Month", JLabel.CENTER);
+		month.setBorder(space);
+		chooserP.add(month,c);
 		c.gridx = 1;
-		chooserP.add(new JLabel("Day", JLabel.CENTER),c);
+		JLabel day = new JLabel("Day", JLabel.CENTER);
+		day.setBorder(space);
+		chooserP.add(day,c);
 		c.gridx = 2; 
-		chooserP.add(new JLabel("Year", JLabel.CENTER),c);
+		JLabel year = new JLabel("Year", JLabel.CENTER);
+		year.setBorder(space);
+		chooserP.add(year,c);
 		c.gridx = 0;
 		c.gridy = 1;
-		
+
 		mm = new MyChooser(1,12);
 		mm.getLeft().addActionListener(this);
 		mm.getRight().addActionListener(this);
@@ -365,19 +407,20 @@ public class TaskWindow extends JDialog implements ActionListener{
 		yyyy.getLeft().addActionListener(this);
 		yyyy.getRight().addActionListener(this);
 		yyyy.setText(cal.get(Calendar.YEAR));
-		
+		maxDay();
+
 		chooserP.add(mm,c);
 		c.gridx = 1;
 		chooserP.add(dd,c);
 		c.gridx = 2;
 		chooserP.add(yyyy,c);
 	}
-	
+
 	private void setupNumdayP() {
 		numdayP = new JPanel();
 		numdayP.setOpaque(false);
 		numdayP.setLayout(new BoxLayout(numdayP, BoxLayout.Y_AXIS));
-		
+
 		JPanel dayP = new JPanel();
 		dayP.setOpaque(false);
 		dayP.add(new JLabel("Task repeats every "));
@@ -386,36 +429,36 @@ public class TaskWindow extends JDialog implements ActionListener{
 		days.getRight().addActionListener(this);
 		dayP.add(days);
 		dayP.add(new JLabel(" days."));
-		
+
 		numdayP.add(dayP);
-		
+
 		JPanel labelP = new JPanel();
 		labelP.setOpaque(false);
 		labelP.add(new JLabel("Starting from:", JLabel.CENTER));
 		numdayP.add(labelP);
-		
-//		chooserP = new JPanel();
-//		chooserP.setOpaque(false);
-//		chooserP.setLayout(new GridBagLayout());
-//		GridBagConstraints c = new GridBagConstraints();
-//		c.gridx = 0;
-//		c.gridy = 0;
-//		chooserP.add(new JLabel("Month", JLabel.CENTER),c);
-//		c.gridx = 1;
-//		chooserP.add(new JLabel("Day", JLabel.CENTER),c);
-//		c.gridx = 2; 
-//		chooserP.add(new JLabel("Year", JLabel.CENTER),c);
-//		c.gridx = 0;
-//		c.gridy = 1;
-//		MyChooser mm2 = mm;
-//		chooserP.add(mm2,c);
-//		c.gridx = 1;
-//		chooserP.add(dd,c);
-//		c.gridx = 2;
-//		chooserP.add(yyyy,c);
-//		numdayP.add(chooserP);
+
+		//		chooserP = new JPanel();
+		//		chooserP.setOpaque(false);
+		//		chooserP.setLayout(new GridBagLayout());
+		//		GridBagConstraints c = new GridBagConstraints();
+		//		c.gridx = 0;
+		//		c.gridy = 0;
+		//		chooserP.add(new JLabel("Month", JLabel.CENTER),c);
+		//		c.gridx = 1;
+		//		chooserP.add(new JLabel("Day", JLabel.CENTER),c);
+		//		c.gridx = 2; 
+		//		chooserP.add(new JLabel("Year", JLabel.CENTER),c);
+		//		c.gridx = 0;
+		//		c.gridy = 1;
+		//		MyChooser mm2 = mm;
+		//		chooserP.add(mm2,c);
+		//		c.gridx = 1;
+		//		chooserP.add(dd,c);
+		//		c.gridx = 2;
+		//		chooserP.add(yyyy,c);
+		//		numdayP.add(chooserP);
 	}
-	
+
 	private void setupWeekdayP() {
 		weekdayP = new JPanel();
 		weekdayP.setOpaque(false);
@@ -425,7 +468,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		labelP.add(new JLabel("On what days is the task due?", 
 				JLabel.CENTER));
 		weekdayP.add(labelP);
-		
+
 		JPanel buttonsP = new JPanel();
 		buttonsP.setOpaque(false);
 		buttons = new JRadioButton[7];
@@ -445,7 +488,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 	public boolean getCloseStatus() {
 		return closeStatus;
 	}
-	
+
 	private void setupTextField(JTextField field) {
 		field.setBackground(trans);
 		field.setSelectionColor(Color.WHITE);
@@ -476,7 +519,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			public void removeUpdate(DocumentEvent arg0) {
 				repaint();
 			}
-			
+
 		});
 		field.addKeyListener(new KeyListener() {
 
@@ -494,10 +537,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 			public void keyTyped(KeyEvent arg0) {
 				repaint();
 			}
-			
+
 		});
 	}
-	
+
 	private void setupTextArea(JTextArea area) {
 		area.setBackground(trans);
 		area.setSelectionColor(Color.WHITE);
@@ -513,7 +556,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			public void caretUpdate(CaretEvent arg0) {
 				repaint();
 			}
-			
+
 		});
 		area.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
@@ -542,7 +585,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			public void removeUpdate(DocumentEvent arg0) {
 				repaint();
 			}
-			
+
 		});
 		area.addKeyListener(new KeyListener() {
 
@@ -560,7 +603,24 @@ public class TaskWindow extends JDialog implements ActionListener{
 			public void keyTyped(KeyEvent arg0) {
 				repaint();
 			}
-			
+
 		});
 	}
+
+	private void maxDay() {
+		int month = mm.getNum();
+		//int selection = dd.getNum();
+		if(month == 2) {
+			if(cal.isLeapYear(yyyy.getNum()))
+				dd.changeMax(29);
+			else
+				dd.changeMax(28);
+		}
+		else
+			if(month == 9 || month == 4 || month == 6 || month == 11)
+				dd.changeMax(30);
+			else 
+				dd.changeMax(31);
+	}
+
 }
