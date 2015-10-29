@@ -36,7 +36,7 @@ public class Task implements Serializable{
 	
 	/** Stores the particular days of the week on which the task 
 	 * repeats */
-	private ArrayList<String> weekdays;
+	private ArrayList<Integer> weekdays;
 	
 	/** Stores the number of days between the due dates for the task */
 	private int daysBetween;
@@ -55,7 +55,7 @@ public class Task implements Serializable{
 		this.dueDate = new GregorianCalendar(TimeZone.getTimeZone(
 				"EST"));
 		this.rep = Repeat.NONE;
-		this.weekdays = new ArrayList<String>();
+		this.weekdays = new ArrayList<Integer>();
 		this.daysBetween = 0;
 		this.completed = false;
 		this.important = true;
@@ -98,7 +98,7 @@ public class Task implements Serializable{
 			str += daysBetween + "|";
 		}
 		if(rep == Repeat.SPDAY) {
-			for(String day: weekdays) {
+			for(int day: weekdays) {
 				str += day + "|";
 			}
 		}
@@ -201,11 +201,11 @@ public class Task implements Serializable{
 		this.rep = rep;
 	}
 	
-	public ArrayList<String> getWeekdays() {
+	public ArrayList<Integer> getWeekdays() {
 		return this.weekdays;
 	}
 	
-	public void setWeekdays(ArrayList<String> weekdays) {
+	public void setWeekdays(ArrayList<Integer> weekdays) {
 		this.weekdays = weekdays;
 	}
 	

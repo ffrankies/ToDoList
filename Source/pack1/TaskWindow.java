@@ -22,13 +22,18 @@ import javax.swing.text.AbstractDocument;
 
 public class TaskWindow extends JDialog implements ActionListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private TaskList list;
 
 	//private DateComboBox dateChooser;
 
 	private JTextField name;
 
-	private JTextField deadline;
+	//private JTextField deadline;
 
 	private JTextField important;
 
@@ -63,12 +68,11 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 	private ArrayList<String> options;
 
-	private Date date;
+	//private Date date;
 
-	private String[] daysStrs;
+//	private String[] daysStrs;
 
 	private GregorianCalendar cal;
-
 
 	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
 		this.task = task;
@@ -89,7 +93,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		textBoxes = new JPanel();
 		textBoxes.setBackground(bckg);
 		textBoxes.setBorder(BorderFactory.createCompoundBorder(
-				new EmptyBorder(5, 5, 5, 5), 
+				new EmptyBorder(5, 5, 5, 5),
 				new JTextField().getBorder()));
 		//textBoxes.set
 
@@ -177,8 +181,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//			}
 		//		});
 		//		textBoxes.add(deadline);
-		date = task.getDate().getTime();
+		//date = task.getDate().getTime();
 		cal = task.getDate();
+		//System.out.println(cal.get(Calendar.DAY_OF_WEEK));
+		
 		setupChooserP();
 		setupNoneP();
 		setupNumdayP();
@@ -221,7 +227,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			{
 				// Set the location
 				// get the current location x-co-ordinate and then get
-				// the current drag x co-ordinate, add them and subtract 
+				// the current drag x co-ordinate, add them and subtract
 				// most recent mouse pressed x co-ordinate
 				// do same for y co-ordinate
 				setLocation(getLocation().x+me.getX()-
@@ -239,18 +245,11 @@ public class TaskWindow extends JDialog implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		//JButton button = (JButton) e.getSource();
-		//Fills the Site if OK is clicked
-		//		if(e.getSource() == choose) {
-		//			dateChooser = new DateComboBox(fmt);
-		//			dateChooser.
-		//		}
-		//Changes panel for choosing deadline depending on repeatType
 		if(e.getSource() == repeatType.getLeft())
 			repeatType.prev();
 		if(e.getSource() == repeatType.getRight())
 			repeatType.next();
-		if(e.getSource() == repeatType.getLeft() || 
+		if(e.getSource() == repeatType.getLeft() ||
 				e.getSource() == repeatType.getRight()) {
 			textBoxes.remove(dLine);
 			String rType = repeatType.getText();
@@ -296,58 +295,44 @@ public class TaskWindow extends JDialog implements ActionListener{
 			closeStatus = OK;
 
 			//If task is already in list, then editing instead of adding
-			//So remove task before adding updated version to list of 
+			//So remove task before adding updated version to list of
 			//tasks
 			if(list.getTasks().contains(task))
 				list.remove(task);
-
-			//Date date;
-
-			//try {
-				task.setTaskName(name.getText());
-				task.setDescription(details.getText());
-				if(important.getText().toLowerCase().equals("yes"))
-					task.setImportant(true);
-				else
-					if(important.getText().toLowerCase().equals("no"))
-						task.setImportant(false);
-				String repeat = repeatType.getText();
-				GregorianCalendar dueDate = new GregorianCalendar();
-				if(repeat.equals("None")) {
-					task.setRepeat(Repeat.NONE);
-					dueDate.set(yyyy.getNum(), mm.getNum()-1, 
+			
+			task.setTaskName(name.getText());
+			task.setDescription(details.getText());
+			if(important.getText().toLowerCase().equals("yes"))
+				task.setImportant(true);
+			else
+				if(important.getText().toLowerCase().equals("no"))
+					task.setImportant(false);
+			String repeat = repeatType.getText();
+			GregorianCalendar dueDate = new GregorianCalendar();
+			if(repeat.equals("None")) {
+				task.setRepeat(Repeat.NONE);
+				dueDate.set(yyyy.getNum(), mm.getNum()-1,
+						dd.getNum());
+				task.setDate(dueDate);
+			}
+			else
+				if(repeat.equals("Every x days")) {
+					task.setRepeat(Repeat.NUMDAY);
+					dueDate.set(yyyy.getNum(), mm.getNum()-1,
 							dd.getNum());
 					task.setDate(dueDate);
+					task.setDaysBetween(days.getNum());
 				}
 				else
-					if(repeat.equals("Every x days")) {
-						task.setRepeat(Repeat.NUMDAY);
-						dueDate.set(yyyy.getNum(), mm.getNum()-1, 
-								dd.getNum());
-						task.setDate(dueDate);
-						task.setDaysBetween(days.getNum());
-					}
-					else
-						if(repeat.equals("Specific days")) {
-							//doNothing
+					if(repeat.equals("Specific days")) {
+						task.setRepeat(Repeat.SPDAY);
+						for(int i = 0; i < buttons.length; ++i) {
+							if(buttons[i].isSelected())
+								task.getWeekdays().add(i+1);
 						}
-//				date = fmt.parse(deadline.getText());
-//				dueDate.setTime(date);
-//				task.setDate(dueDate);
-//				dueDate.set(year, month, date);
-				//date = fmt.parse(deadline.getText());
-
-				//task.setDate(deadline.getText());
-				
-			//}
-//			catch ( ParseException exception ) {
-//				exception.printStackTrace();
-//			}
-
-			//Adds edited/newly created task to list
+					}
+			//System.out.println(task.toString());
 			list.add(task);
-			//getParent().repaint();
-			//paOccupy.repaint();
 			dispose();
 		}
 
@@ -387,7 +372,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		JLabel day = new JLabel("Day", JLabel.CENTER);
 		day.setBorder(space);
 		chooserP.add(day,c);
-		c.gridx = 2; 
+		c.gridx = 2;
 		JLabel year = new JLabel("Year", JLabel.CENTER);
 		year.setBorder(space);
 		chooserP.add(year,c);
@@ -446,7 +431,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//		chooserP.add(new JLabel("Month", JLabel.CENTER),c);
 		//		c.gridx = 1;
 		//		chooserP.add(new JLabel("Day", JLabel.CENTER),c);
-		//		c.gridx = 2; 
+		//		c.gridx = 2;
 		//		chooserP.add(new JLabel("Year", JLabel.CENTER),c);
 		//		c.gridx = 0;
 		//		c.gridy = 1;
@@ -465,16 +450,16 @@ public class TaskWindow extends JDialog implements ActionListener{
 		weekdayP.setLayout(new BoxLayout(weekdayP, BoxLayout.Y_AXIS));
 		JPanel labelP = new JPanel();
 		labelP.setOpaque(false);
-		labelP.add(new JLabel("On what days is the task due?", 
+		labelP.add(new JLabel("On what days is the task due?",
 				JLabel.CENTER));
 		weekdayP.add(labelP);
 
 		JPanel buttonsP = new JPanel();
 		buttonsP.setOpaque(false);
 		buttons = new JRadioButton[7];
-		String[] daysStrs = {"Mon", "Tue", "Wed", "Thu", "Fri", 
-				"Sat", "Sun"};
-		this.daysStrs = daysStrs;
+		String[] daysStrs = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri",
+				"Sat"};
+//		this.daysStrs = daysStrs;
 		for(int i = 0; i < buttons.length; i++) {
 			buttons[i] = new JRadioButton(daysStrs[i]);
 			buttons[i].setBackground(trans);
@@ -558,6 +543,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 			}
 
 		});
+		//area.get().addChangeListener(new ChangeListener() {})
+		//System.out.println(area.getIgnoreRepaint());
 		area.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
 				repaint();
@@ -619,8 +606,14 @@ public class TaskWindow extends JDialog implements ActionListener{
 		else
 			if(month == 9 || month == 4 || month == 6 || month == 11)
 				dd.changeMax(30);
-			else 
+			else
 				dd.changeMax(31);
+	}
+	
+	private String getDay(int day) {
+		String[] week = {"Sun", "Mon", "Tue", "Tue", "Wed", "Thu", 
+				"Fri", "Sat"};
+		return week[day-1];
 	}
 
 }

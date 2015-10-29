@@ -47,7 +47,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private int pX, pY;
 
 	protected String[] columnToolTips = {"A description of the task.",
-			"The due date for the task.", "Is this task urgent?", 
+			"The due date for the task.", "Is this task urgent?",
 	"Check this box once you have completed the task."};
 
 	public TaskGUI() {
@@ -55,7 +55,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		model = new TaskList();
 		table = new JTable(model) {
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -64,7 +64,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 				//String tip = null;
 				java.awt.Point p = e.getPoint();
 				//                int index = columnModel.getColumnIndexAtX(p.x);
-				//                int realIndex = 
+				//                int realIndex =
 				//                		columnModel.getColumn(index).getModelIndex();
 				//                return columnToolTips[realIndex];
 				int rowIndex = rowAtPoint(p);
@@ -76,11 +76,11 @@ public class TaskGUI extends JFrame implements ActionListener {
 					return columnToolTips[realColIndex];
 			}
 
-			//Implement table header tool tips. 
+			//Implement table header tool tips.
 			protected JTableHeader createDefaultTableHeader() {
 				return new JTableHeader(columnModel) {
 					/**
-					 * 
+					 *
 					 */
 					private static final long serialVersionUID = 1L;
 
@@ -88,12 +88,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 						// String tip = null;
 						java.awt.Point p = e.getPoint();
 						int index = columnModel.getColumnIndexAtX(p.x);
-						int realIndex = 
+						int realIndex =
 								columnModel.getColumn(
 										index).getModelIndex();
 						return columnToolTips[realIndex];
 					}
-					
+
 				};
 			}
 		};
@@ -101,7 +101,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setBorder(null);
 		table.setOpaque(false);
 		table.getTableHeader().setBackground(new Color(1,1,1,0f));
-		
+
 		//table.setIntercellSpacing(new Dimension(0,0));
 		//table.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
 		//table.getTableHeader().setOpaque(false);
@@ -110,7 +110,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setBackground(new Color(1,1,1,0f));
 		table.setSelectionBackground(new Color(1,1,1,0.3f));
 		table.setFocusable(false);
-		
+
 		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -120,7 +120,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 				repaint();
 			}
 		});
-		
+
 		//table.setSize(new Dimension(250,250));
 		scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(new Color(1,1,1,0f));
@@ -129,8 +129,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 		//scrollPane.setMaximumSize(new Dimension(250,250));
 		//panel = new JPanel();
 
-		/*GridBagLayout controls the size of elements in the frame 
-		 *It was chosen because the buttons need to be small, with 
+		/*GridBagLayout controls the size of elements in the frame
+		 *It was chosen because the buttons need to be small, with
 		 *a table covering most of the JFrame area */
 		setLayout(new GridBagLayout());
 		//Instantiating buttons
@@ -203,7 +203,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 			{
 				// Set the location
 				// get the current location x-co-ordinate and then get
-				// the current drag x co-ordinate, add them and subtract 
+				// the current drag x co-ordinate, add them and subtract
 				// most recent mouse pressed x co-ordinate
 				// do same for y co-ordinate
 				setLocation(getLocation().x+me.getX()-
@@ -237,7 +237,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		}
 		model.save();
 		repaint();
-		if(button == close) 
+		if(button == close)
 			System.exit(0);
 
 	}
