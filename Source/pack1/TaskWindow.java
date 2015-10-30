@@ -330,6 +330,14 @@ public class TaskWindow extends JDialog implements ActionListener{
 							if(buttons[i].isSelected())
 								task.getWeekdays().add(i+1);
 						}
+						dueDate = task.getDate();
+						//dueDate.setTime(new Date());
+						do {
+							dueDate.add(Calendar.DATE, 1);
+						}
+						while(!task.getWeekdays().contains(
+								cal.get(Calendar.DAY_OF_WEEK)));
+						task.setDate(dueDate);
 					}
 			//System.out.println(task.toString());
 			list.add(task);

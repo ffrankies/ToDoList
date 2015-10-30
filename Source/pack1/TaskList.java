@@ -3,7 +3,9 @@ package pack1;
 import java.io.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -146,7 +148,7 @@ public class TaskList extends AbstractTableModel {
 			getTask(row).setCompleted((boolean) value);
 		fireTableCellUpdated(row, col);
 	}
-	
+
 	/*@Override
     public Class getColumnClass(int column) {
     return getValueAt(0, column).getClass();
@@ -159,7 +161,7 @@ public class TaskList extends AbstractTableModel {
 		case 1:
 			return String.class;
 			//            case 2:
-				//                return Boolean.class;
+			//                return Boolean.class;
 			//            case 3:
 			//                return Boolean.class;
 		default:
@@ -187,6 +189,45 @@ public class TaskList extends AbstractTableModel {
 			return tasks.get(row).isCompleted();
 		default:
 			return null;
+		}
+	}
+
+	/*
+	 * Performs the right operation when a task is marked as completed:
+	 * If a task does not repeat, removes task from taskList
+	 * Else, sets the task's due date to the next appropriate date
+	 */
+	public void removeCompleted() {
+		for(Task temp: tasks) {
+			if(temp.isCompleted()) {
+				Repeat rep = temp.getRepeat();
+				//If task doesn't repeat, remove from list of tasks
+				if(rep == Repeat.NONE) {
+					remove(temp);
+				//If task repeats ever x days, add x days to current
+				//date and set that as task's new due date
+				} else if(rep == Repeat.NUMDAY) {
+					GregorianCalendar cal = new GregorianCalendar();
+					Date date = new Date();
+					cal.setTime(date);
+					cal.add(Calendar.DATE, temp.getDaysBetween());
+					temp.setDate(cal);
+					temp.setCompleted(false);
+				//If task repeats on specific weekdays, keep adding 1
+				//to task's due date until the date of the due date 
+				//matches one of the days of the week it's supposed
+				//to repeat on
+				} else if(rep == Repeat.SPDAY) {
+					GregorianCalendar cal = temp.getDate();
+					do {
+						cal.add(Calendar.DATE, 1);
+					}
+					while(!temp.getWeekdays().contains(
+							cal.get(Calendar.DAY_OF_WEEK)));
+					temp.setDate(cal);
+					temp.setCompleted(false);
+				}
+			}
 		}
 	}
 

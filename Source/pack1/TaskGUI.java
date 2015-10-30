@@ -237,9 +237,11 @@ public class TaskGUI extends JFrame implements ActionListener {
 		}
 		model.save();
 		repaint();
-		if(button == close)
+		if(button == close) {
+			model.removeCompleted();
+			model.save();
 			System.exit(0);
-
+		}
 	}
 
 	public static void main(String[] args) {
