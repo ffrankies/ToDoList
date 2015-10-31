@@ -33,9 +33,9 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 	private boolean closeStatus;
 
-	private final Color bckg = new Color(1,1,1,0.55f);
-	private final Color trans = new Color(1,1,1,0f);
-	private final Color select = new Color(0,0,0,0.4f);
+	private final Color trans = new Color(1,1,1,0.55f);
+	private final Color bckg = Color.WHITE;
+	//private final Color due = Color.RED;
 
 	public static final boolean OK = true;
 	public static final boolean CANCEL = false;

@@ -126,7 +126,7 @@ public class TaskList extends AbstractTableModel {
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int row, int col) { 
-		if(col == 2 || col == 3)
+		if(col == 2)
 			return true;
 		else
 			return false;

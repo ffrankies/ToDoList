@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,8 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
@@ -49,6 +53,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 	protected String[] columnToolTips = {"A description of the task.",
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
+
+	private final Color trans = new Color(1,1,1,0.55f);
+	private final Color bckg = Color.WHITE;
+	private final Color select = Color.LIGHT_GRAY;
+	private final Color dark = Color.BLACK;
+	private final Color due = Color.RED;
 
 	public TaskGUI() {
 
@@ -100,15 +110,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setShowGrid(false);
 		table.setBorder(null);
 		table.setOpaque(false);
-		table.getTableHeader().setBackground(new Color(1,1,1,0f));
-
-		//table.setIntercellSpacing(new Dimension(0,0));
-		//table.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
-		//table.getTableHeader().setOpaque(false);
-		//table.setGridColor(new Color(1,1,1,0.55f));
-		//table.set
-		table.setBackground(new Color(1,1,1,0f));
-		table.setSelectionBackground(new Color(1,1,1,0.3f));
+		table.getTableHeader().setBackground(bckg);
+		table.setBackground(bckg);
+		table.setSelectionBackground(select);
 		table.setFocusable(false);
 
 		/* Prevents more than one task from being selected */
@@ -121,11 +125,44 @@ public class TaskGUI extends JFrame implements ActionListener {
 			}
 		});
 
-		//table.setSize(new Dimension(250,250));
 		scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(new Color(1,1,1,0f));
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
-		scrollPane.setBackground(new Color(1,1,1,0.55f));
+		scrollPane.setBackground(bckg);
+		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
+		{   
+			@Override 
+			protected void configureScrollBarColors(){
+				this.thumbColor = bckg;
+				this.trackColor = dark;
+			}
+
+			@Override
+			protected JButton createDecreaseButton(int orientation) {
+				JButton button = new JButton("+");
+				button.setFocusPainted(false);
+				button.setBackground(bckg);
+				button.setForeground(dark);
+				button.setMargin(new Insets(0,0,0,0));
+				return button;
+			}
+
+			@Override    
+			protected JButton createIncreaseButton(int orientation) {
+				JButton button = new JButton("-");
+				button.setFocusPainted(false);
+				button.setBackground(bckg);
+				button.setForeground(dark);
+				button.setMargin(new Insets(0,0,0,0));
+				return button;
+			}
+
+		});
+
+		//		scrollPane.getVerticalScrollBar().setBackground(bckg);
+		//		scrollPane.getVerticalScrollBar().setForeground(bckg);
+		//		scrollPane.getVerticalScrollBar().
+
 		//scrollPane.setMaximumSize(new Dimension(250,250));
 		//panel = new JPanel();
 
@@ -192,8 +229,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 				// Get x,y and store them
 				pX=me.getX();
 				pY=me.getY();
-//				table.clearSelection();
-//				repaint();
+				//				table.clearSelection();
+				//				repaint();
 			}
 		});
 
@@ -214,7 +251,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 		setSize(450,170);
 		setUndecorated(true); //No menuBar on frame
-		setBackground(new Color(1,1,1,0.55f)); //Makes background translucent-white
+		setBackground(trans); //Makes background translucent-white
 		setVisible(true);
 	}
 
