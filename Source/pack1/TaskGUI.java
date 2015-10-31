@@ -1,23 +1,31 @@
 package pack1;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.ColorUIResource;
@@ -73,13 +81,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 			public String getToolTipText(MouseEvent e) {
 				//String tip = null;
 				java.awt.Point p = e.getPoint();
-				//                int index = columnModel.getColumnIndexAtX(p.x);
-				//                int realIndex =
-				//                		columnModel.getColumn(index).getModelIndex();
-				//                return columnToolTips[realIndex];
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
-				int realColIndex = columnModel.getColumn(colIndex).getModelIndex();
+				int realColIndex = 
+						columnModel.getColumn(colIndex).getModelIndex();
 				if(realColIndex == 0)
 					return model.getTask(rowIndex).getDescription();
 				else
@@ -95,7 +100,6 @@ public class TaskGUI extends JFrame implements ActionListener {
 					private static final long serialVersionUID = 1L;
 
 					public String getToolTipText(MouseEvent e) {
-						// String tip = null;
 						java.awt.Point p = e.getPoint();
 						int index = columnModel.getColumnIndexAtX(p.x);
 						int realIndex =
@@ -111,9 +115,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setBorder(null);
 		table.setOpaque(false);
 		table.getTableHeader().setBackground(bckg);
-		table.setBackground(bckg);
 		table.setSelectionBackground(select);
 		table.setFocusable(false);
+		table.setSize(296,700);
 
 		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -126,9 +130,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 		});
 
 		scrollPane = new JScrollPane(table);
-		scrollPane.getViewport().setBackground(new Color(1,1,1,0f));
+		scrollPane.getViewport().setBackground(bckg);
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setBackground(bckg);
+		scrollPane.setSize(296,700);
+		
+		//Changes colors of scrollPane's scrollBar
 		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
 		{   
 			@Override 
@@ -159,62 +166,39 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 		});
 
-		//		scrollPane.getVerticalScrollBar().setBackground(bckg);
-		//		scrollPane.getVerticalScrollBar().setForeground(bckg);
-		//		scrollPane.getVerticalScrollBar().
-
-		//scrollPane.setMaximumSize(new Dimension(250,250));
-		//panel = new JPanel();
-
-		/*GridBagLayout controls the size of elements in the frame
-		 *It was chosen because the buttons need to be small, with
-		 *a table covering most of the JFrame area */
-		setLayout(new GridBagLayout());
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		
 		//Instantiating buttons
-		add = new JButton("Add");
-		add.addActionListener(this);
-		//add.setMaximumSize(new Dimension(100,100));
 		close = new JButton("Close");
 		close.addActionListener(this);
-		//add.setMaximumSize(new Dimension(100,100));
+		add = new JButton("Add");
+		add.addActionListener(this);
 		remove = new JButton("Remove");
 		remove.addActionListener(this);
 		edit = new JButton("Edit");
 		edit.addActionListener(this);
 
-		//Constraints for close button, to appear at top right corner
-		GridBagConstraints top = new GridBagConstraints();
-		top.weightx = 1;
-		top.weighty = 1;
-		top.gridwidth = 1;
-		top.gridx = 2;
-		top.gridy = 0;
-		top.anchor = GridBagConstraints.FIRST_LINE_END;
-		add(close,top);
+		JPanel closeP = new JPanel();
+		closeP.setLayout(new FlowLayout());
+		closeP.setOpaque(false);
+		closeP.add(close);
+		closeP.setSize(300,close.getHeight());
+		add(closeP);
+		
+		JPanel scrollP = new JPanel();
+		scrollP.setLayout(new BorderLayout());
+		scrollP.setOpaque(false);
+		scrollP.setBorder(new EmptyBorder(0,5,0,5));
+		scrollP.add(scrollPane, BorderLayout.CENTER);
+		add(scrollP);
 
-		//Constraints for the scrollpanel, containing the table
-		GridBagConstraints scroll = new GridBagConstraints();
-		scroll.weightx = 1;
-		scroll.weighty = 1;
-		scroll.gridwidth = 3;
-		scroll.gridx = 0;
-		scroll.gridy = 1;
-		scroll.ipady = 100;
-		scroll.ipadx = 420;
-		add(scrollPane,scroll);
-
-		//Constraints for the add, remove and edit buttons
-		GridBagConstraints buttons = new GridBagConstraints();
-		buttons.weightx = 1;
-		buttons.weighty = 1;
-		buttons.gridx = 2;
-		buttons.gridy = 2;
-		buttons.anchor = GridBagConstraints.LAST_LINE_END;
-		add(add,buttons);
-		buttons.gridx = 1;
-		add(remove,buttons);
-		buttons.gridx = 0;
-		add(edit,buttons);
+		JPanel buttonsP = new JPanel();
+		buttonsP.setOpaque(false);
+		buttonsP.add(add);
+		buttonsP.add(remove);
+		buttonsP.add(edit);
+		buttonsP.setBorder(new EmptyBorder(0,0,25,0));
+		add(buttonsP);
 
 		scrollPane.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {
@@ -247,9 +231,17 @@ public class TaskGUI extends JFrame implements ActionListener {
 						pX,getLocation().y+me.getY()-pY);
 			}
 		});
-
-
-		setSize(450,170);
+		
+		
+		GraphicsEnvironment ge = 
+				GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+        Rectangle rect = 
+        		defaultScreen.getDefaultConfiguration().getBounds();
+        setSize(300,(int) rect.getMaxY());
+        int x = (int) rect.getMaxX() - this.getWidth();
+        int y = 0;
+		setLocation(x,y);
 		setUndecorated(true); //No menuBar on frame
 		setBackground(trans); //Makes background translucent-white
 		setVisible(true);
@@ -282,6 +274,15 @@ public class TaskGUI extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new TaskGUI();
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				
+				new TaskGUI();
+				
+			}
+			
+		});
 	}
 }
