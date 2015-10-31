@@ -47,7 +47,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private int pX, pY;
 
 	protected String[] columnToolTips = {"A description of the task.",
-			"The due date for the task.", "Is this task urgent?",
+			"The due date for the task.",
 	"Check this box once you have completed the task."};
 
 	public TaskGUI() {

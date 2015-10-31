@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 
 public class TaskList extends AbstractTableModel {
@@ -22,8 +19,7 @@ public class TaskList extends AbstractTableModel {
 
 	File file = new File ("taskList");
 
-	private String[] columnNames = {"Task", "Due Date",  "Urgent?", 
-	"Completed?"};
+	private String[] columnNames = {"Task", "Due Date", "Completed?"};
 
 	/*
 	 * Automatically loads saved tasks from taskList file
@@ -143,8 +139,6 @@ public class TaskList extends AbstractTableModel {
 	 */
 	public void setValueAt(Object value, int row, int col) {
 		if(col == 2)
-			getTask(row).setImportant((boolean) value);
-		if(col == 3)
 			getTask(row).setCompleted((boolean) value);
 		fireTableCellUpdated(row, col);
 	}
@@ -184,8 +178,6 @@ public class TaskList extends AbstractTableModel {
 					tasks.get(row).getDate().getTime());
 			//return "ABC";
 		case 2:
-			return tasks.get(row).isImportant();
-		case 3:
 			return tasks.get(row).isCompleted();
 		default:
 			return null;

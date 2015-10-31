@@ -2,22 +2,16 @@ package pack1;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.*;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.text.AbstractDocument;
 
 public class TaskWindow extends JDialog implements ActionListener{
@@ -29,13 +23,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 	private TaskList list;
 
-	//private DateComboBox dateChooser;
-
 	private JTextField name;
-
-	//private JTextField deadline;
-
-	private JTextField important;
 
 	private JTextArea details;
 
@@ -134,20 +122,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 		textBoxes.add(descPanel);
 
 		textBoxes.add(new JSeparator());
-
-		JPanel impPanel = new JPanel();
-		impPanel.add(new JLabel("Is the task urgent?"));
-		impPanel.setOpaque(false);
-		//important = new JTextField("Yes/No",30);
-		String imp;
-		if(task.isImportant())
-			imp = "Yes";
-		else
-			imp = "No";
-		important = new JTextField(imp,10);
-		setupTextField(important);
-		impPanel.add(important);
-		textBoxes.add(impPanel);
 
 		//Instantiates the repeat textfield
 		options = new ArrayList<String>();
@@ -302,11 +276,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 			
 			task.setTaskName(name.getText());
 			task.setDescription(details.getText());
-			if(important.getText().toLowerCase().equals("yes"))
-				task.setImportant(true);
-			else
-				if(important.getText().toLowerCase().equals("no"))
-					task.setImportant(false);
 			String repeat = repeatType.getText();
 			GregorianCalendar dueDate = new GregorianCalendar();
 			if(repeat.equals("None")) {
@@ -331,7 +300,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 								task.getWeekdays().add(i+1);
 						}
 						dueDate = task.getDate();
-						//dueDate.setTime(new Date());
 						do {
 							dueDate.add(Calendar.DATE, 1);
 						}
@@ -339,7 +307,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 								cal.get(Calendar.DAY_OF_WEEK)));
 						task.setDate(dueDate);
 					}
-			//System.out.println(task.toString());
 			list.add(task);
 			dispose();
 		}
@@ -618,10 +585,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 				dd.changeMax(31);
 	}
 	
-	private String getDay(int day) {
-		String[] week = {"Sun", "Mon", "Tue", "Tue", "Wed", "Thu", 
-				"Fri", "Sat"};
-		return week[day-1];
-	}
+//	private String getDay(int day) {
+//		String[] week = {"Sun", "Mon", "Tue", "Tue", "Wed", "Thu", 
+//				"Fri", "Sat"};
+//		return week[day-1];
+//	}
 
 }

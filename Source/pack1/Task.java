@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -24,9 +23,6 @@ public class Task implements Serializable{
 	
 	/** The due date for the task */
 	private GregorianCalendar dueDate;
-	
-	/** Whether or not the task is urgent. Possibly unneeded */
-	private boolean important;
 	
 	/** Whether or not the task has been completed */
 	private boolean completed;
@@ -58,7 +54,6 @@ public class Task implements Serializable{
 		this.weekdays = new ArrayList<Integer>();
 		this.daysBetween = 0;
 		this.completed = false;
-		this.important = true;
 		fmt.setLenient(false);
 	}
 	
@@ -102,7 +97,7 @@ public class Task implements Serializable{
 				str += day + "|";
 			}
 		}
-		str += important + "|" + completed; 
+		str += "|" + completed; 
 		return str;
 	}
 	
@@ -112,7 +107,8 @@ public class Task implements Serializable{
 	public boolean equals(Task other) {
 		return this.taskName.equals(other.taskName) && 
 				this.dueDate.getTime().equals(other.dueDate.getTime()) 
-				&& this.important == other.important;
+				&& this.description == other.description
+				&& this.rep == other.rep;
 	}
 
 	/**
@@ -149,20 +145,6 @@ public class Task implements Serializable{
 	
 	public void setDate(GregorianCalendar dueDate) {
 		this.dueDate = dueDate;
-	}
-
-	/**
-	 * @return the important
-	 */
-	public boolean isImportant() {
-		return important;
-	}
-
-	/**
-	 * @param important the important to set
-	 */
-	public void setImportant(boolean important) {
-		this.important = important;
 	}
 	
 	/**
