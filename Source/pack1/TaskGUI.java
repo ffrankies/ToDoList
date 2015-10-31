@@ -2,6 +2,7 @@ package pack1;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GraphicsDevice;
@@ -14,6 +15,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -32,6 +37,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 public class TaskGUI extends JFrame implements ActionListener {
@@ -61,6 +67,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 	protected String[] columnToolTips = {"A description of the task.",
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
+	
+	private final SimpleDateFormat fmt = 
+			new SimpleDateFormat("MM/dd/yyyy");
+	//SimpleDateFormat format = SimpleDateFormat.SHORT;
 
 	private final Color trans = new Color(1,1,1,0.55f);
 	private final Color bckg = Color.WHITE;
@@ -110,6 +120,29 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 				};
 			}
+			
+			public Component prepareRenderer(
+					TableCellRenderer renderer, int row, int column)
+			{
+				Component c = 
+						super.prepareRenderer(renderer, row, column);
+
+				//Makes row red if task is overdue
+				if (!isRowSelected(row))
+				{
+					c.setBackground(getBackground());
+					int modelRow = convertRowIndexToModel(row);
+					Date date = new Date();
+					System.out.println(fmt.format(date));
+					String str = 
+							(String)getModel().getValueAt(modelRow,1);
+					Date dueD = model.getTask(modelRow).getDate().getTime();
+					if(date.after(dueD))
+						c.setBackground(due);
+				}
+
+				return c;
+			}
 		};
 		table.setShowGrid(false);
 		table.setBorder(null);
@@ -118,6 +151,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setSelectionBackground(select);
 		table.setFocusable(false);
 		table.setSize(296,700);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.getColumnModel().getColumn(0).setMinWidth(140);
+		table.getColumnModel().getColumn(1).setMinWidth(50);
+		table.getColumnModel().getColumn(2).setMinWidth(50);
 
 		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
