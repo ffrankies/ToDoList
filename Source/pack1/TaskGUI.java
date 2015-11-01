@@ -153,6 +153,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.getColumnModel().getColumn(1).setCellRenderer(cell);
 		CheckBoxRenderer ren = new CheckBoxRenderer();
 		table.getColumnModel().getColumn(2).setCellRenderer(ren);
+		//table.
 
 		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -169,8 +170,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setBackground(bckg);
 		//scrollPane.setSize(296,700);
-
+		scrollPane.setVerticalScrollBarPolicy(
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		//Changes colors of scrollPane's scrollBar
+		
 		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
 		{   
 			@Override 
@@ -223,7 +228,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		JPanel scrollP = new JPanel();
 		scrollP.setLayout(new BorderLayout());
 		scrollP.setOpaque(false);
-		scrollP.setBorder(new EmptyBorder(0,5,0,5));
+		scrollP.setBorder(new EmptyBorder(0,0,0,0));
 		scrollP.add(scrollPane, BorderLayout.CENTER);
 		add(scrollP);
 		//table.getColumnModel().getColumn(0).setMinWidth(scrollPane.getWidth()-62);
@@ -233,7 +238,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		buttonsP.add(add);
 		buttonsP.add(remove);
 		buttonsP.add(edit);
-		buttonsP.setBorder(new EmptyBorder(0,0,25,0));
+		buttonsP.setBorder(new EmptyBorder(0,0,29,0));
 		add(buttonsP);
 
 		scrollPane.addMouseListener(new MouseAdapter() {
@@ -274,9 +279,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 		GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
 		Rectangle rect = 
 				defaultScreen.getDefaultConfiguration().getBounds();
-		setSize(300,(int) rect.getMaxY());
-		if(scrollPane.getVerticalScrollBar().isVisible())
-			setSize(320,getHeight());
+		setSize(320,(int) rect.getMaxY());
+//		if(scrollPane.getVerticalScrollBar().isVisible())
+//			setSize(320,getHeight());
 		int x = (int) rect.getMaxX() - this.getWidth();
 		int y = 0;
 		setLocation(x,y);
@@ -305,7 +310,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 			//model.remove(task);
 		}
 		taskModel.save();
-		repaint();
+		scrollPane.repaint();
+		
 		if(button == close) {
 			taskModel.removeCompleted();
 			taskModel.save();

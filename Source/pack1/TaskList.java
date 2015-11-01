@@ -17,7 +17,7 @@ public class TaskList extends AbstractTableModel {
 
 	private ArrayList <Task> tasks;
 
-	File file = new File ("taskList");
+	private File file = new File ("taskList");
 
 	private String[] columnNames = {"Task", "Due Date", "Completed?"};
 

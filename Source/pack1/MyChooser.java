@@ -3,6 +3,7 @@ package pack1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -186,5 +187,9 @@ public class MyChooser extends JPanel { //implements ActionListener {
 			index = nums.indexOf(max);
 			setText(max);
 		}
+	}
+	
+	public void addFont(Font font) {
+		this.display.setFont(font);
 	}
 }

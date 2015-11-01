@@ -2,10 +2,14 @@ package pack1;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.*;
 import java.util.*;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -54,14 +58,18 @@ public class TaskWindow extends JDialog implements ActionListener{
 	private ArrayList<String> options;
 
 	private GregorianCalendar cal;
+	
+	private final Font font = new Font("Cooper Black", Font.PLAIN, 13);
+	private final Font small = new Font("Arial", Font.PLAIN, 12);
 
 	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
 		this.task = task;
 		this.list = list;
 
-		setTitle("Create a new task");
+		//setTitle("Create a new task");
 		closeStatus = CANCEL;
 		setSize(300,500);
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		JSeparator separator = new JSeparator();
 		separator.setForeground(dark);
@@ -72,16 +80,19 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Creates the transparent panel
 		textBoxes = new JPanel();
 		textBoxes.setBackground(bckg);
-		textBoxes.setBorder(new JTextField().getBorder());
+		//textBoxes.setBorder(new JTextField().getBorder());
 		textBoxes.setLayout(new BoxLayout(textBoxes, BoxLayout.Y_AXIS));
 
 		//Adds title to taskWindow
 		JPanel title = new JPanel();
 		title.setOpaque(false);
+		JLabel titleL;
 		if(list.getTasks().contains(task))
-			title.add(new JLabel("Edit Task", JLabel.CENTER));
+			titleL = new JLabel("Edit Task", JLabel.CENTER);
 		else
-			title.add(new JLabel("Create New Task", JLabel.CENTER));
+			titleL = new JLabel("Create New Task", JLabel.CENTER);
+		titleL.setFont(font);
+		title.add(titleL);
 		textBoxes.add(title);
 
 		textBoxes.add(separator);
@@ -90,10 +101,12 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Instantiates the taskName textfield
 		JPanel namePanel = new JPanel();
 		namePanel.add(new JLabel("Description:"));
+		namePanel.getComponent(0).setFont(font);
 		namePanel.setOpaque(false);
 		name = new JTextField(task.getTaskName(),15);
 		((AbstractDocument) name.getDocument()).setDocumentFilter(
 				new DocumentSizeFilter(23));
+		//name.setFont(font);
 		setupTextField(name);
 		namePanel.add(name);
 		textBoxes.add(namePanel);
@@ -101,6 +114,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Instantiates the description textfield
 		JPanel descPanel = new JPanel();
 		descPanel.add(new JLabel("Details:"));
+		descPanel.getComponent(0).setFont(font);
 		descPanel.setOpaque(false);
 		details = new JTextArea(task.getDescription(),4,20);
 		setupTextArea(details);
@@ -118,8 +132,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 		repeatType = new MyChooser(options);
 		repeatType.getLeft().addActionListener(this);
 		repeatType.getRight().addActionListener(this);
+		repeatType.addFont(font);
 		JPanel reptPanel = new JPanel();
 		reptPanel.add(new JLabel("Repeat:"));
+		reptPanel.getComponent(0).setFont(font);
 		reptPanel.add(repeatType);
 		reptPanel.setOpaque(false);
 		textBoxes.add(reptPanel);
@@ -136,9 +152,9 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Adds spacing between textBoxes and edge of TaskWindow
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		panel.setBorder(new EmptyBorder(10,2,0,2));
+		panel.setBorder(new EmptyBorder(10,-5,0,-5));
 		panel.add(textBoxes);
-		getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(panel);
 
 		JPanel buttons = new JPanel();
 		buttons.setOpaque(false);
@@ -152,7 +168,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
 
-		getContentPane().add(buttons, BorderLayout.SOUTH);
+		//getContentPane().add(buttons, BorderLayout.SOUTH);
+		getContentPane().add(buttons);
 
 		// Add mouse listener for this frame
 		addMouseListener(new MouseAdapter(){
@@ -179,6 +196,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			}
 		});
 
+		//setFont();
 		setUndecorated(true);
 		setBackground(trans);
 		pack();
@@ -294,6 +312,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		JPanel labelP = new JPanel();
 		labelP.setOpaque(false);
 		labelP.add(new JLabel("Due date:", JLabel.CENTER));
+		labelP.getComponent(0).setFont(font);
 		noneP.add(labelP);
 
 		//setupChooserP();
@@ -310,14 +329,17 @@ public class TaskWindow extends JDialog implements ActionListener{
 		c.gridy = 0;
 		Border space = new EmptyBorder(0,10,0,10);
 		JLabel month = new JLabel("Month", JLabel.CENTER);
+		month.setFont(font);
 		month.setBorder(space);
 		chooserP.add(month,c);
 		c.gridx = 1;
 		JLabel day = new JLabel("Day", JLabel.CENTER);
+		day.setFont(font);
 		day.setBorder(space);
 		chooserP.add(day,c);
 		c.gridx = 2;
 		JLabel year = new JLabel("Year", JLabel.CENTER);
+		year.setFont(font);
 		year.setBorder(space);
 		chooserP.add(year,c);
 		c.gridx = 0;
@@ -328,14 +350,17 @@ public class TaskWindow extends JDialog implements ActionListener{
 		mm.getRight().addActionListener(this);
 		//System.out.println(cal.get(Calendar.MONTH));
 		mm.setText(cal.get(Calendar.MONTH)+1);
+		mm.addFont(font);
 		dd = new MyChooser(1,31);
 		dd.getLeft().addActionListener(this);
 		dd.getRight().addActionListener(this);
 		dd.setText(cal.get(Calendar.DAY_OF_MONTH));
+		dd.addFont(font);
 		yyyy = new MyChooser(2015,2045);
 		yyyy.getLeft().addActionListener(this);
 		yyyy.getRight().addActionListener(this);
 		yyyy.setText(cal.get(Calendar.YEAR));
+		yyyy.addFont(font);
 		maxDay();
 
 		chooserP.add(mm,c);
