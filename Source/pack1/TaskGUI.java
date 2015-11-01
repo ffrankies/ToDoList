@@ -3,42 +3,22 @@ package pack1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 
 public class TaskGUI extends JFrame implements ActionListener {
 
@@ -68,8 +48,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
 	
-	private final SimpleDateFormat fmt = 
-			new SimpleDateFormat("MM/dd/yyyy");
+//	private final SimpleDateFormat fmt = 
+//			new SimpleDateFormat("MM/dd/yyyy");
 	//SimpleDateFormat format = SimpleDateFormat.SHORT;
 
 	private final Color trans = new Color(1,1,1,0.55f);
@@ -77,6 +57,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private final Color select = Color.LIGHT_GRAY;
 	private final Color dark = Color.BLACK;
 	private final Color due = Color.RED;
+	
+	private final Font font = new Font("Cooper Black", Font.PLAIN, 15);
 
 	public TaskGUI() {
 
@@ -102,24 +84,24 @@ public class TaskGUI extends JFrame implements ActionListener {
 			}
 
 			//Implement table header tool tips.
-			protected JTableHeader createDefaultTableHeader() {
-				return new JTableHeader(columnModel) {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
-
-					public String getToolTipText(MouseEvent e) {
-						java.awt.Point p = e.getPoint();
-						int index = columnModel.getColumnIndexAtX(p.x);
-						int realIndex =
-								columnModel.getColumn(
-										index).getModelIndex();
-						return columnToolTips[realIndex];
-					}
-
-				};
-			}
+//			protected JTableHeader createDefaultTableHeader() {
+//				return new JTableHeader(columnModel) {
+//					/**
+//					 *
+//					 */
+//					private static final long serialVersionUID = 1L;
+//
+//					public String getToolTipText(MouseEvent e) {
+//						java.awt.Point p = e.getPoint();
+//						int index = columnModel.getColumnIndexAtX(p.x);
+//						int realIndex =
+//								columnModel.getColumn(
+//										index).getModelIndex();
+//						return columnToolTips[realIndex];
+//					}
+//
+//				};
+//			}
 			
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column)
@@ -133,9 +115,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 					c.setBackground(getBackground());
 					int modelRow = convertRowIndexToModel(row);
 					Date date = new Date();
-					System.out.println(fmt.format(date));
-					String str = 
-							(String)getModel().getValueAt(modelRow,1);
+					//System.out.println(fmt.format(date));
+//					String str = 
+//							(String)getModel().getValueAt(modelRow,1);
 					Date dueD = model.getTask(modelRow).getDate().getTime();
 					if(date.after(dueD))
 						c.setBackground(due);
@@ -152,9 +134,17 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setFocusable(false);
 		table.setSize(296,700);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table.getColumnModel().getColumn(0).setMinWidth(140);
+		table.getColumnModel().getColumn(0).setMinWidth(200);
+		//table.getColumnModel().getColumn(0).setMaxWidth(220);
 		table.getColumnModel().getColumn(1).setMinWidth(50);
-		table.getColumnModel().getColumn(2).setMinWidth(50);
+		table.getColumnModel().getColumn(2).setMinWidth(15);
+		table.getColumnModel().getColumn(2).setMaxWidth(15);
+		//table.getColumnModel().getColumn(0).setMinWidth(scrollPane.getWidth()-62);
+		//table.getColumnModel().getColumn(2).get
+		table.setTableHeader(null);
+		table.setFont(font);
+		CheckBoxRenderer ren = new CheckBoxRenderer();
+		table.getColumnModel().getColumn(2).setCellRenderer(ren);
 
 		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -170,7 +160,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		scrollPane.getViewport().setBackground(bckg);
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setBackground(bckg);
-		scrollPane.setSize(296,700);
+		//scrollPane.setSize(296,700);
 		
 		//Changes colors of scrollPane's scrollBar
 		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
@@ -228,6 +218,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		scrollP.setBorder(new EmptyBorder(0,5,0,5));
 		scrollP.add(scrollPane, BorderLayout.CENTER);
 		add(scrollP);
+		//table.getColumnModel().getColumn(0).setMinWidth(scrollPane.getWidth()-62);
 
 		JPanel buttonsP = new JPanel();
 		buttonsP.setOpaque(false);
@@ -269,7 +260,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 			}
 		});
 		
-		
+		//Makes GUI extend to the bottom of the screen
 		GraphicsEnvironment ge = 
 				GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
@@ -310,6 +301,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 		}
 	}
 
+	/*
+	 * Main function invokes the GUI.
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -322,4 +316,38 @@ public class TaskGUI extends JFrame implements ActionListener {
 			
 		});
 	}
+	
+	/*
+	 * Allows me to edit the checkBox in the third column of the 
+	 * table
+	 */
+	private class CheckBoxRenderer extends JCheckBox implements 
+	TableCellRenderer {
+
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		CheckBoxRenderer() {
+          setHorizontalAlignment(JLabel.CENTER);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, 
+        		Object value, boolean isSelected, boolean hasFocus, 
+        		int row, int column) {
+          if (isSelected) {
+            setForeground(table.getSelectionForeground());
+            //super.setBackground(table.getSelectionBackground());
+            setBackground(table.getSelectionBackground());
+          } else {
+            setForeground(table.getForeground());
+            setBackground(table.getBackground());
+          }
+          setSelected((Boolean)value);
+         // model.getTasks().get(row).setCompleted((Boolean)value);
+          //setSelected((value != null && ((Boolean) value).booleanValue()));
+          return this;
+        }
+}
 }

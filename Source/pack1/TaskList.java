@@ -190,12 +190,14 @@ public class TaskList extends AbstractTableModel {
 	 * Else, sets the task's due date to the next appropriate date
 	 */
 	public void removeCompleted() {
+		ArrayList<Task> rem = new ArrayList<Task>();
 		for(Task temp: tasks) {
 			if(temp.isCompleted()) {
 				Repeat rep = temp.getRepeat();
 				//If task doesn't repeat, remove from list of tasks
 				if(rep == Repeat.NONE) {
-					remove(temp);
+					//remove(temp);
+					rem.add(temp);
 				//If task repeats ever x days, add x days to current
 				//date and set that as task's new due date
 				} else if(rep == Repeat.NUMDAY) {
@@ -221,6 +223,8 @@ public class TaskList extends AbstractTableModel {
 				}
 			}
 		}
+		for(Task temp: rem)
+			tasks.remove(temp);
 	}
 
 	//	@Override
