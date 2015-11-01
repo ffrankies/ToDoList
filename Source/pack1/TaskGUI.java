@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private JTable table;
 
 	/* Contains the list of tasks */
-	private TaskList model;
+	private TaskList taskModel;
 
 	/* Allows user to scroll through tasks */
 	private JScrollPane scrollPane;
@@ -48,22 +49,24 @@ public class TaskGUI extends JFrame implements ActionListener {
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
 
-	//	private final SimpleDateFormat fmt = 
-	//			new SimpleDateFormat("MM/dd/yyyy");
+		private final SimpleDateFormat fmt = 
+				new SimpleDateFormat("MM/dd/yyyy");
 	//SimpleDateFormat format = SimpleDateFormat.SHORT;
 
 	private final Color trans = new Color(1,1,1,0.55f);
 	private final Color bckg = Color.WHITE;
 	private final Color select = Color.LIGHT_GRAY;
 	private final Color dark = Color.BLACK;
-	private final Color due = Color.RED;
+//	private final Color due = Color.RED;
+	private final Color due = new Color(0.8f,0.3f,0.3f);
+	private final Color selectDue = Color.PINK;
 
 	private final Font font = new Font("Cooper Black", Font.PLAIN, 15);
 
 	public TaskGUI() {
 
-		model = new TaskList();
-		table = new JTable(model) {
+		taskModel = new TaskList();
+		table = new JTable(taskModel) {
 			/**
 			 *
 			 */
@@ -78,7 +81,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 				int realColIndex = 
 						columnModel.getColumn(colIndex).getModelIndex();
 				if(realColIndex == 0)
-					return model.getTask(rowIndex).getDescription();
+					return taskModel.getTask(rowIndex).getDescription();
 				else
 					return columnToolTips[realColIndex];
 			}
@@ -103,33 +106,35 @@ public class TaskGUI extends JFrame implements ActionListener {
 			//				};
 			//			}
 
-			public Component prepareRenderer(
-					TableCellRenderer renderer, int row, int column)
-			{
-				Component c = 
-						super.prepareRenderer(renderer, row, column);
-
-				//Makes row red if task is overdue
-				if (!isRowSelected(row))
-				{
-					c.setBackground(getBackground());
-					int modelRow = convertRowIndexToModel(row);
-					Date date = new Date();
-					//System.out.println(fmt.format(date));
-					//					String str = 
-					//							(String)getModel().getValueAt(modelRow,1);
-					Date dueD = model.getTask(modelRow).getDate().getTime();
-					if(date.after(dueD))
-						c.setBackground(due);
-				}
-
-				return c;
-			}
+//			public Component prepareRenderer(
+//					TableCellRenderer renderer, int row, int column)
+//			{
+//				Component c = 
+//						super.prepareRenderer(renderer, row, column);
+//
+//				//Makes row red if task is overdue
+//				if (!isRowSelected(row))
+//				{
+//					c.setBackground(getBackground());
+//					int modelRow = convertRowIndexToModel(row);
+//					Date date = new Date();
+//					//System.out.println(fmt.format(date));
+//					//					String str = 
+//					//							(String)getModel().getValueAt(modelRow,1);
+//					Date dueD = taskModel.getTask(modelRow).getDate().getTime();
+//					if(date.after(dueD))
+//						c.setForeground(due);
+//					else
+//						c.setForeground(dark);
+//				}
+//
+//				return c;
+//			}
 		};
 		table.setShowGrid(false);
 		table.setBorder(null);
 		table.setOpaque(false);
-		table.getTableHeader().setBackground(bckg);
+		//table.getTableHeader().setBackground(bckg);
 		table.setSelectionBackground(select);
 		table.setFocusable(false);
 		table.setSize(296,700);
@@ -142,7 +147,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		//table.getColumnModel().getColumn(0).setMinWidth(scrollPane.getWidth()-62);
 		//table.getColumnModel().getColumn(2).get
 		table.setTableHeader(null);
-		table.setFont(font);
+		//table.setFont(font);
 		MyCellRenderer cell = new MyCellRenderer();
 		table.getColumnModel().getColumn(0).setCellRenderer(cell);
 		table.getColumnModel().getColumn(1).setCellRenderer(cell);
@@ -270,6 +275,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 		Rectangle rect = 
 				defaultScreen.getDefaultConfiguration().getBounds();
 		setSize(300,(int) rect.getMaxY());
+		if(scrollPane.getVerticalScrollBar().isVisible())
+			setSize(320,getHeight());
 		int x = (int) rect.getMaxX() - this.getWidth();
 		int y = 0;
 		setLocation(x,y);
@@ -283,23 +290,25 @@ public class TaskGUI extends JFrame implements ActionListener {
 		JButton button = (JButton) e.getSource();
 		if(button == add) {
 			Task task = new Task();
-			new TaskWindow(this,task,model);
+			new TaskWindow(this,task,taskModel);
+			if(scrollPane.getVerticalScrollBar().isVisible())
+				setSize(320,getHeight());
 			//model.add(task);
 		}
 		if(button == remove) {
-			Task task = model.getTask(table.getSelectedRow());
-			model.remove(task);
+			Task task = taskModel.getTask(table.getSelectedRow());
+			taskModel.remove(task);
 		}
 		if(button == edit) {
-			Task task = model.getTask(table.getSelectedRow());
-			new TaskWindow(this,task,model);
+			Task task = taskModel.getTask(table.getSelectedRow());
+			new TaskWindow(this,task,taskModel);
 			//model.remove(task);
 		}
-		model.save();
+		taskModel.save();
 		repaint();
 		if(button == close) {
-			model.removeCompleted();
-			model.save();
+			taskModel.removeCompleted();
+			taskModel.save();
 			System.exit(0);
 		}
 	}
@@ -339,14 +348,29 @@ public class TaskGUI extends JFrame implements ActionListener {
 		public Component getTableCellRendererComponent(JTable table, 
 				Object value, boolean isSelected, boolean hasFocus, 
 				int row, int column) {
-			if (isSelected) {
-				setForeground(table.getSelectionForeground());
-				//super.setBackground(table.getSelectionBackground());
-				setBackground(table.getSelectionBackground());
-			} else {
-				setForeground(table.getForeground());
-				setBackground(table.getBackground());
-			}
+//			if (isSelected) {
+//				//setForeground(table.getSelectionForeground());
+//				setForeground(table.getSelectionForeground());
+//				//super.setBackground(table.getSelectionBackground());
+//				setBackground(select);
+//			} else {
+//				setForeground(table.getForeground());
+//				setBackground(bckg);
+//			}
+			
+			Date date = new Date();
+			Date dueD = taskModel.getTask(row).getDate().getTime();
+			
+			if(isSelected)
+	        	if(date.after(dueD))
+	        		this.setBackground(selectDue);
+	        	else
+	        		this.setBackground(select);
+	        else
+	        	if(date.after(dueD))
+	        		this.setBackground(due);
+	        	else
+	        		this.setBackground(bckg);
 			setSelected((Boolean)value);
 			// model.getTasks().get(row).setCompleted((Boolean)value);
 			//setSelected((value != null && ((Boolean) value).booleanValue()));
@@ -354,6 +378,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 		}
 	}
 	
+	/*
+	 * Allows me to edit how the text is displayed in the table
+	 */
 	public class MyCellRenderer  extends JTextPane 
 	implements TableCellRenderer {
 
@@ -368,21 +395,28 @@ public class TaskGUI extends JFrame implements ActionListener {
 	        this.setText((String)value);
 	        //this.setWrapStyleWord(true);            
 	     //   this.setLineWrap(true);  
-	        this.setAlignmentX(CENTER_ALIGNMENT);
-	        this.setAlignmentY(CENTER_ALIGNMENT);
+	        //^^^^^could be useful if I choose to change the way I render this
 	        this.setFont(font);
 	        Insets i = this.getInsets();
-	       
-	        int fontHeight = this.getFontMetrics(this.getFont()).getHeight();
-	       // int textLength = this.getText().length();
-	        //int lines = textLength / (this.getColumns() +1);//+1, cause we need at least 1 row.           
+	        int fontHeight = this.getFontMetrics(this.getFont()).getHeight();         
 	        int height = fontHeight * 2;            
 	        table.setRowHeight(row, height);
 	        int vert = 6;
-//	        System.out.println(table.getRowHeight());
-//	        System.out.println(this.getFontMetrics(font).getHeight()/2);
-//	        System.out.println(vert);
 	        this.setMargin(new Insets(vert,i.left,vert,i.right));
+	        
+	        Date date = new Date();
+			Date dueD = taskModel.getTask(row).getDate().getTime();
+			
+			if(isSelected)
+	        	if(date.after(dueD))
+	        		this.setBackground(selectDue);
+	        	else
+	        		this.setBackground(select);
+	        else
+	        	if(date.after(dueD))
+	        		this.setBackground(due);
+	        	else
+	        		this.setBackground(bckg);
 	        return this;
 	    }
 
