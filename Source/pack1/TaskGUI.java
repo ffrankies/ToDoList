@@ -47,9 +47,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 	protected String[] columnToolTips = {"A description of the task.",
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
-	
-//	private final SimpleDateFormat fmt = 
-//			new SimpleDateFormat("MM/dd/yyyy");
+
+	//	private final SimpleDateFormat fmt = 
+	//			new SimpleDateFormat("MM/dd/yyyy");
 	//SimpleDateFormat format = SimpleDateFormat.SHORT;
 
 	private final Color trans = new Color(1,1,1,0.55f);
@@ -57,7 +57,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private final Color select = Color.LIGHT_GRAY;
 	private final Color dark = Color.BLACK;
 	private final Color due = Color.RED;
-	
+
 	private final Font font = new Font("Cooper Black", Font.PLAIN, 15);
 
 	public TaskGUI() {
@@ -84,25 +84,25 @@ public class TaskGUI extends JFrame implements ActionListener {
 			}
 
 			//Implement table header tool tips.
-//			protected JTableHeader createDefaultTableHeader() {
-//				return new JTableHeader(columnModel) {
-//					/**
-//					 *
-//					 */
-//					private static final long serialVersionUID = 1L;
-//
-//					public String getToolTipText(MouseEvent e) {
-//						java.awt.Point p = e.getPoint();
-//						int index = columnModel.getColumnIndexAtX(p.x);
-//						int realIndex =
-//								columnModel.getColumn(
-//										index).getModelIndex();
-//						return columnToolTips[realIndex];
-//					}
-//
-//				};
-//			}
-			
+			//			protected JTableHeader createDefaultTableHeader() {
+			//				return new JTableHeader(columnModel) {
+			//					/**
+			//					 *
+			//					 */
+			//					private static final long serialVersionUID = 1L;
+			//
+			//					public String getToolTipText(MouseEvent e) {
+			//						java.awt.Point p = e.getPoint();
+			//						int index = columnModel.getColumnIndexAtX(p.x);
+			//						int realIndex =
+			//								columnModel.getColumn(
+			//										index).getModelIndex();
+			//						return columnToolTips[realIndex];
+			//					}
+			//
+			//				};
+			//			}
+
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column)
 			{
@@ -116,8 +116,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 					int modelRow = convertRowIndexToModel(row);
 					Date date = new Date();
 					//System.out.println(fmt.format(date));
-//					String str = 
-//							(String)getModel().getValueAt(modelRow,1);
+					//					String str = 
+					//							(String)getModel().getValueAt(modelRow,1);
 					Date dueD = model.getTask(modelRow).getDate().getTime();
 					if(date.after(dueD))
 						c.setBackground(due);
@@ -134,15 +134,18 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setFocusable(false);
 		table.setSize(296,700);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table.getColumnModel().getColumn(0).setMinWidth(200);
+		table.getColumnModel().getColumn(0).setMinWidth(195);
 		//table.getColumnModel().getColumn(0).setMaxWidth(220);
 		table.getColumnModel().getColumn(1).setMinWidth(50);
-		table.getColumnModel().getColumn(2).setMinWidth(15);
+		table.getColumnModel().getColumn(2).setMinWidth(20);
 		table.getColumnModel().getColumn(2).setMaxWidth(15);
 		//table.getColumnModel().getColumn(0).setMinWidth(scrollPane.getWidth()-62);
 		//table.getColumnModel().getColumn(2).get
 		table.setTableHeader(null);
 		table.setFont(font);
+		MyCellRenderer cell = new MyCellRenderer();
+		table.getColumnModel().getColumn(0).setCellRenderer(cell);
+		table.getColumnModel().getColumn(1).setCellRenderer(cell);
 		CheckBoxRenderer ren = new CheckBoxRenderer();
 		table.getColumnModel().getColumn(2).setCellRenderer(ren);
 
@@ -161,7 +164,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setBackground(bckg);
 		//scrollPane.setSize(296,700);
-		
+
 		//Changes colors of scrollPane's scrollBar
 		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
 		{   
@@ -194,7 +197,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		});
 
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		
+
 		//Instantiating buttons
 		close = new JButton("Close");
 		close.addActionListener(this);
@@ -211,7 +214,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		closeP.add(close);
 		closeP.setSize(300,close.getHeight());
 		add(closeP);
-		
+
 		JPanel scrollP = new JPanel();
 		scrollP.setLayout(new BorderLayout());
 		scrollP.setOpaque(false);
@@ -259,16 +262,16 @@ public class TaskGUI extends JFrame implements ActionListener {
 						pX,getLocation().y+me.getY()-pY);
 			}
 		});
-		
+
 		//Makes GUI extend to the bottom of the screen
 		GraphicsEnvironment ge = 
 				GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
-        Rectangle rect = 
-        		defaultScreen.getDefaultConfiguration().getBounds();
-        setSize(300,(int) rect.getMaxY());
-        int x = (int) rect.getMaxX() - this.getWidth();
-        int y = 0;
+		GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+		Rectangle rect = 
+				defaultScreen.getDefaultConfiguration().getBounds();
+		setSize(300,(int) rect.getMaxY());
+		int x = (int) rect.getMaxX() - this.getWidth();
+		int y = 0;
 		setLocation(x,y);
 		setUndecorated(true); //No menuBar on frame
 		setBackground(trans); //Makes background translucent-white
@@ -309,14 +312,14 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 			@Override
 			public void run() {
-				
+
 				new TaskGUI();
-				
+
 			}
-			
+
 		});
 	}
-	
+
 	/*
 	 * Allows me to edit the checkBox in the third column of the 
 	 * table
@@ -324,30 +327,64 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private class CheckBoxRenderer extends JCheckBox implements 
 	TableCellRenderer {
 
-        /**
+		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		CheckBoxRenderer() {
-          setHorizontalAlignment(JLabel.CENTER);
-        }
+			setHorizontalAlignment(JLabel.CENTER);
+		}
 
-        public Component getTableCellRendererComponent(JTable table, 
-        		Object value, boolean isSelected, boolean hasFocus, 
-        		int row, int column) {
-          if (isSelected) {
-            setForeground(table.getSelectionForeground());
-            //super.setBackground(table.getSelectionBackground());
-            setBackground(table.getSelectionBackground());
-          } else {
-            setForeground(table.getForeground());
-            setBackground(table.getBackground());
-          }
-          setSelected((Boolean)value);
-         // model.getTasks().get(row).setCompleted((Boolean)value);
-          //setSelected((value != null && ((Boolean) value).booleanValue()));
-          return this;
-        }
-}
+		public Component getTableCellRendererComponent(JTable table, 
+				Object value, boolean isSelected, boolean hasFocus, 
+				int row, int column) {
+			if (isSelected) {
+				setForeground(table.getSelectionForeground());
+				//super.setBackground(table.getSelectionBackground());
+				setBackground(table.getSelectionBackground());
+			} else {
+				setForeground(table.getForeground());
+				setBackground(table.getBackground());
+			}
+			setSelected((Boolean)value);
+			// model.getTasks().get(row).setCompleted((Boolean)value);
+			//setSelected((value != null && ((Boolean) value).booleanValue()));
+			return this;
+		}
+	}
+	
+	public class MyCellRenderer  extends JTextPane 
+	implements TableCellRenderer {
+
+	    @Override
+	    public Component getTableCellRendererComponent(
+	            JTable table,
+	            Object value,
+	            boolean isSelected,
+	            boolean hasFocus,
+	            int row,
+	            int column) {
+	        this.setText((String)value);
+	        //this.setWrapStyleWord(true);            
+	     //   this.setLineWrap(true);  
+	        this.setAlignmentX(CENTER_ALIGNMENT);
+	        this.setAlignmentY(CENTER_ALIGNMENT);
+	        this.setFont(font);
+	        Insets i = this.getInsets();
+	       
+	        int fontHeight = this.getFontMetrics(this.getFont()).getHeight();
+	       // int textLength = this.getText().length();
+	        //int lines = textLength / (this.getColumns() +1);//+1, cause we need at least 1 row.           
+	        int height = fontHeight * 2;            
+	        table.setRowHeight(row, height);
+	        int vert = 6;
+//	        System.out.println(table.getRowHeight());
+//	        System.out.println(this.getFontMetrics(font).getHeight()/2);
+//	        System.out.println(vert);
+	        this.setMargin(new Insets(vert,i.left,vert,i.right));
+	        return this;
+	    }
+
+	}
 }
