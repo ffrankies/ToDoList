@@ -3,6 +3,7 @@ package pack1;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
@@ -62,10 +63,14 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private final Color selectDue = Color.PINK;
 
 	private final Font font = new Font("Cooper Black", Font.PLAIN, 15);
+	
+	private ImageIcon closeI, closeIPr, addI, addIPr, editI, editIPr, 
+	deleteI, deleteIPr, inc, dec;
 
 	public TaskGUI() {
 
 		taskModel = new TaskList();
+		loadIcons();
 		table = new JTable(taskModel) {
 			/**
 			 *
@@ -182,24 +187,29 @@ public class TaskGUI extends JFrame implements ActionListener {
 			protected void configureScrollBarColors(){
 				this.thumbColor = bckg;
 				this.trackColor = dark;
+				this.scrollBarWidth = 20;
 			}
 
 			@Override
 			protected JButton createDecreaseButton(int orientation) {
-				JButton button = new JButton("+");
+				JButton button = new JButton();
 				button.setFocusPainted(false);
-				button.setBackground(bckg);
-				button.setForeground(dark);
+				button.setFocusable(false);
+				button.setRolloverEnabled(false);
+				button.setIcon(dec);
+				button.setContentAreaFilled(false);
 				button.setMargin(new Insets(0,0,0,0));
 				return button;
 			}
 
 			@Override    
 			protected JButton createIncreaseButton(int orientation) {
-				JButton button = new JButton("-");
+				JButton button = new JButton();
 				button.setFocusPainted(false);
-				button.setBackground(bckg);
-				button.setForeground(dark);
+				button.setFocusable(false);
+				button.setRolloverEnabled(false);
+				button.setIcon(inc);
+				button.setContentAreaFilled(false);
 				button.setMargin(new Insets(0,0,0,0));
 				return button;
 			}
@@ -427,4 +437,28 @@ public class TaskGUI extends JFrame implements ActionListener {
 	    }
 
 	}
+	
+	private void loadIcons() {
+		closeI = loadImage("\\Resources\\Close.png");
+		closeIPr = loadImage("\\Resources\\ClosePr.png");
+		addI = loadImage("\\Resources\\Add.png");
+		addIPr = loadImage("\\Resources\\AddPr.png");
+		editI = loadImage("\\Resources\\Edit.png");
+		editIPr = loadImage("\\Resources\\EditPr.png");
+		deleteI = loadImage("\\Resources\\Remove.png");
+		deleteIPr = loadImage("\\Resources\\RemovePr.png"); 
+		inc = loadImage("\\Resources\\Inc.png");
+		dec = loadImage("\\Resources\\Dec.png");
+	}
+	
+	private ImageIcon loadImage(String imageName) {
+
+		ImageIcon image = null;
+		image = new ImageIcon("C:\\Users\\Frank\\"
+				+ "workspace\\ToDoList\\Source\\pack1\\"
+				+ imageName);
+		return image;
+
+	}
+	
 }
