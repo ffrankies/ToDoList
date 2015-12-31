@@ -50,15 +50,15 @@ public class TaskGUI extends JFrame implements ActionListener {
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
 
-		private final SimpleDateFormat fmt = 
-				new SimpleDateFormat("MM/dd/yyyy");
+//		private final SimpleDateFormat fmt = 
+//				new SimpleDateFormat("MM/dd/yyyy");
 	//SimpleDateFormat format = SimpleDateFormat.SHORT;
 
+	//Colors used in the program
 	private final Color trans = new Color(1,1,1,0.55f);
 	private final Color bckg = Color.WHITE;
 	private final Color select = Color.LIGHT_GRAY;
 	private final Color dark = Color.BLACK;
-//	private final Color due = Color.RED;
 	private final Color due = new Color(0.8f,0.3f,0.3f);
 	private final Color selectDue = Color.PINK;
 
@@ -73,13 +73,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 		loadIcons();
 		table = new JTable(taskModel) {
 			/**
-			 *
+			 *Default serial ID for the 
 			 */
 			private static final long serialVersionUID = 1L;
 
 			//Implements tooltips when a cell is moused over
 			public String getToolTipText(MouseEvent e) {
-				//String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
 				int colIndex = columnAtPoint(p);
@@ -88,87 +87,39 @@ public class TaskGUI extends JFrame implements ActionListener {
 				if(realColIndex == 0)
 					return taskModel.getTask(rowIndex).getDescription();
 				else
-					return columnToolTips[realColIndex];
+					return "";
 			}
-
-			//Implement table header tool tips.
-			//			protected JTableHeader createDefaultTableHeader() {
-			//				return new JTableHeader(columnModel) {
-			//					/**
-			//					 *
-			//					 */
-			//					private static final long serialVersionUID = 1L;
-			//
-			//					public String getToolTipText(MouseEvent e) {
-			//						java.awt.Point p = e.getPoint();
-			//						int index = columnModel.getColumnIndexAtX(p.x);
-			//						int realIndex =
-			//								columnModel.getColumn(
-			//										index).getModelIndex();
-			//						return columnToolTips[realIndex];
-			//					}
-			//
-			//				};
-			//			}
-
-//			public Component prepareRenderer(
-//					TableCellRenderer renderer, int row, int column)
-//			{
-//				Component c = 
-//						super.prepareRenderer(renderer, row, column);
-//
-//				//Makes row red if task is overdue
-//				if (!isRowSelected(row))
-//				{
-//					c.setBackground(getBackground());
-//					int modelRow = convertRowIndexToModel(row);
-//					Date date = new Date();
-//					//System.out.println(fmt.format(date));
-//					//					String str = 
-//					//							(String)getModel().getValueAt(modelRow,1);
-//					Date dueD = taskModel.getTask(modelRow).getDate().getTime();
-//					if(date.after(dueD))
-//						c.setForeground(due);
-//					else
-//						c.setForeground(dark);
-//				}
-//
-//				return c;
-//			}
+			
+			@Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setBackground(select);
+                toolTip.setForeground(dark);
+                toolTip.setBorder(BorderFactory.createEmptyBorder());
+                    return toolTip;
+            }
+			
 		};
 		table.setShowGrid(false);
 		table.setBorder(null);
 		table.setOpaque(false);
-		//table.getTableHeader().setBackground(bckg);
 		table.setSelectionBackground(select);
 		table.setFocusable(false);
-		table.setSize(296,700);
+		table.setSize(296,700); // I think this is overidden somewhere
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setMinWidth(195);
-		//table.getColumnModel().getColumn(0).setMaxWidth(220);
 		table.getColumnModel().getColumn(1).setMinWidth(50);
-		table.getColumnModel().getColumn(2).setMinWidth(20);
-		table.getColumnModel().getColumn(2).setMaxWidth(15);
-		//table.getColumnModel().getColumn(0).setMinWidth(scrollPane.getWidth()-62);
-		//table.getColumnModel().getColumn(2).get
+		table.getColumnModel().getColumn(2).setMinWidth(18);
+		table.getColumnModel().getColumn(2).setMaxWidth(18);
 		table.setTableHeader(null);
-		//table.setFont(font);
 		MyCellRenderer cell = new MyCellRenderer();
 		table.getColumnModel().getColumn(0).setCellRenderer(cell);
 		table.getColumnModel().getColumn(1).setCellRenderer(cell);
 		CheckBoxRenderer ren = new CheckBoxRenderer();
 		table.getColumnModel().getColumn(2).setCellRenderer(ren);
-		//table.
 
 		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		/* Prevents opacity from building up on each click */
-		table.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				repaint();
-			}
-		});
 
 		scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(bckg);
@@ -179,14 +130,14 @@ public class TaskGUI extends JFrame implements ActionListener {
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		//Changes colors of scrollPane's scrollBar
 		
+		//Changes colors of scrollPane's scrollBar
 		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
 		{   
 			@Override 
 			protected void configureScrollBarColors(){
-				this.thumbColor = bckg;
-				this.trackColor = dark;
+				this.thumbColor = dark;
+				this.trackColor = bckg;
 				this.scrollBarWidth = 20;
 			}
 
@@ -194,11 +145,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 			protected JButton createDecreaseButton(int orientation) {
 				JButton button = new JButton();
 				button.setFocusPainted(false);
+				button.setBorderPainted(false);
 				button.setFocusable(false);
 				button.setRolloverEnabled(false);
 				button.setIcon(dec);
 				button.setContentAreaFilled(false);
-				button.setMargin(new Insets(0,0,0,0));
+				button.setMargin(new Insets(-3,0,-3,0));
 				return button;
 			}
 
@@ -206,16 +158,17 @@ public class TaskGUI extends JFrame implements ActionListener {
 			protected JButton createIncreaseButton(int orientation) {
 				JButton button = new JButton();
 				button.setFocusPainted(false);
+				button.setBorderPainted(false);
 				button.setFocusable(false);
 				button.setRolloverEnabled(false);
 				button.setIcon(inc);
 				button.setContentAreaFilled(false);
-				button.setMargin(new Insets(0,0,0,0));
+				button.setMargin(new Insets(-3,0,-3,0));
 				return button;
 			}
 
 		});
-
+		
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		//Instantiating buttons
@@ -237,7 +190,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		edit = new JButton();
 		//edit.addActionListener(this);
 		edit.setIcon(editI);
-		edit.setPressedIcon(editI);
+		edit.setPressedIcon(editIPr);
 		setButton(edit);
 		
 		JPanel closeP = new JPanel();
@@ -377,15 +330,6 @@ public class TaskGUI extends JFrame implements ActionListener {
 		public Component getTableCellRendererComponent(JTable table, 
 				Object value, boolean isSelected, boolean hasFocus, 
 				int row, int column) {
-//			if (isSelected) {
-//				//setForeground(table.getSelectionForeground());
-//				setForeground(table.getSelectionForeground());
-//				//super.setBackground(table.getSelectionBackground());
-//				setBackground(select);
-//			} else {
-//				setForeground(table.getForeground());
-//				setBackground(bckg);
-//			}
 			
 			Date date = new Date();
 			Date dueD = taskModel.getTask(row).getDate().getTime();
@@ -401,8 +345,6 @@ public class TaskGUI extends JFrame implements ActionListener {
 	        	else
 	        		this.setBackground(bckg);
 			setSelected((Boolean)value);
-			// model.getTasks().get(row).setCompleted((Boolean)value);
-			//setSelected((value != null && ((Boolean) value).booleanValue()));
 			return this;
 		}
 	}
@@ -413,7 +355,12 @@ public class TaskGUI extends JFrame implements ActionListener {
 	public class MyCellRenderer  extends JTextPane 
 	implements TableCellRenderer {
 
-	    @Override
+	    /**
+		 * Default serial ID
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
 	    public Component getTableCellRendererComponent(
 	            JTable table,
 	            Object value,
@@ -451,6 +398,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 	}
 	
+	/*
+	 * Loads icons in use
+	 */
 	private void loadIcons() {
 		closeI = loadImage("\\Resources\\Close.png");
 		closeIPr = loadImage("\\Resources\\ClosePr.png");
@@ -464,6 +414,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 		dec = loadImage("\\Resources\\Dec.png");
 	}
 	
+	/*
+	 * Converts png images to imageIcons to be used for buttons
+	 */
 	private ImageIcon loadImage(String imageName) {
 
 		ImageIcon image = null;
@@ -474,6 +427,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 	}
 	
+	/*
+	 * Disables button opacity and borders, so the buttons correctly
+	 * display images and nothing else.
+	 */
 	private void setButton(JButton button) {
 		button.setOpaque(false);
 		button.addActionListener(this);
