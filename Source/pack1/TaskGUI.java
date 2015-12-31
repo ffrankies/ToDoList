@@ -219,15 +219,27 @@ public class TaskGUI extends JFrame implements ActionListener {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		//Instantiating buttons
-		close = new JButton("Close");
-		close.addActionListener(this);
-		add = new JButton("Add");
-		add.addActionListener(this);
-		remove = new JButton("Remove");
-		remove.addActionListener(this);
-		edit = new JButton("Edit");
-		edit.addActionListener(this);
-
+		close = new JButton();
+		//close.addActionListener(this);
+		close.setIcon(closeI);
+		close.setPressedIcon(closeIPr);
+		setButton(close);
+		add = new JButton();
+		//add.addActionListener(this);
+		add.setIcon(addI);
+		add.setPressedIcon(addIPr);
+		setButton(add);
+		remove = new JButton();
+		//remove.addActionListener(this);
+		remove.setIcon(deleteI);
+		remove.setPressedIcon(deleteIPr);
+		setButton(remove);
+		edit = new JButton();
+		//edit.addActionListener(this);
+		edit.setIcon(editI);
+		edit.setPressedIcon(editI);
+		setButton(edit);
+		
 		JPanel closeP = new JPanel();
 		closeP.setLayout(new FlowLayout());
 		closeP.setOpaque(false);
@@ -459,6 +471,15 @@ public class TaskGUI extends JFrame implements ActionListener {
 				+ imageName);
 		return image;
 
+	}
+	
+	private void setButton(JButton button) {
+		button.setOpaque(false);
+		button.addActionListener(this);
+		button.setFocusPainted(false);
+		button.setFocusable(false);
+		button.setBorderPainted(false);
+		button.setContentAreaFilled(false);
 	}
 	
 }
