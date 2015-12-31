@@ -324,6 +324,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		}
 		if(button == remove) {
 			Task task = taskModel.getTask(table.getSelectedRow());
+			table.clearSelection();
 			taskModel.remove(task);
 		}
 		if(button == edit) {
