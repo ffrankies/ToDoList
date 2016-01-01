@@ -1,17 +1,17 @@
 package pack1;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+//import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 public class TaskList extends AbstractTableModel {
@@ -160,6 +160,7 @@ public class TaskList extends AbstractTableModel {
     public Class getColumnClass(int column) {
     return getValueAt(0, column).getClass();
     }*/
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Class getColumnClass(int column) {
 		switch (column) {
@@ -250,7 +251,6 @@ public class TaskList extends AbstractTableModel {
 		//					"java -jar ToDoList v1.00.jar");
 		//		} catch (IllegalArgumentException | IllegalAccessException
 		//				| InvocationTargetException e) {
-		//			// TODO Auto-generated catch block
 		//			e.printStackTrace();
 		//		}
 		String fileName = "ToDoList.jar";
@@ -259,8 +259,10 @@ public class TaskList extends AbstractTableModel {
 		String info = "start \"\" \"" + System.getProperty(
 				"user.dir") + "\\" + fileName + "\"" + "\n" + "exit";
 		try {
+			@SuppressWarnings("resource")
 			Scanner fileReader = new Scanner(startup);
 			while(fileReader.hasNext()){
+				@SuppressWarnings("unused")
 				String temp = fileReader.nextLine();
 			}
 //			FileInputStream fis = new FileInputStream(startup);
@@ -310,7 +312,6 @@ public class TaskList extends AbstractTableModel {
 		//							"java -jar " + nameOld);
 		//				} catch (IllegalArgumentException | IllegalAccessException
 		//						| InvocationTargetException e) {
-		//					// TODO Auto-generated catch block
 		//					e.printStackTrace();
 		//				}
 		//				startup.delete();

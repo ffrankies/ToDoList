@@ -2,13 +2,20 @@ package pack1;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
+//import java.awt.Font;
+
+
 
 import javax.swing.*;
 
+@SuppressWarnings("rawtypes")
 public class ComboBoxRenderer extends JPanel 
 implements ListCellRenderer {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//private Font uhOhFont;
 	private final Color trans = new Color(1,1,1,0f);
 	private final Color select = new Color(1,1,1,0.3f);
@@ -16,7 +23,7 @@ implements ListCellRenderer {
 	JPanel textPanel;
     JLabel text;
 
-    public ComboBoxRenderer(JComboBox combo) {
+	public ComboBoxRenderer(JComboBox combo) {
 
     	setOpaque(false);
     	setBackground(trans);

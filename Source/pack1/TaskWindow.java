@@ -1,9 +1,9 @@
 package pack1;
 
-import java.awt.BorderLayout;
+//import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
+//import java.awt.Component;
+//import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -60,7 +60,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 	private GregorianCalendar cal;
 	
 	private final Font font = new Font("Cooper Black", Font.PLAIN, 13);
-	private final Font small = new Font("Arial", Font.PLAIN, 12);
+	//private final Font small = new Font("Arial", Font.PLAIN, 12);
 
 	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
 		this.task = task;
@@ -269,7 +269,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 				task.setDate(dueDate);
 			}
 			else
-				if(repeat.equals("Every x days")) {
+				if(repeat.equals("At intervals")) {
 					task.setRepeat(Repeat.NUMDAY);
 					dueDate.set(yyyy.getNum(), mm.getNum()-1,
 							dd.getNum());
