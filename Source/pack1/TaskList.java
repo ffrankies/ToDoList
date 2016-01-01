@@ -1,11 +1,17 @@
 package pack1;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Scanner;
+
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 public class TaskList extends AbstractTableModel {
@@ -19,6 +25,12 @@ public class TaskList extends AbstractTableModel {
 
 	private File file = new File ("taskList");
 
+	private String filePath = "C:\\Users\\" + 
+			System.getProperty("user.name") + "\\AppData\\Roaming\\Microsoft\\"
+			+ "Windows\\Start Menu\\Programs\\Startup\\ToDoList.bat";
+
+	private File startup = new File (filePath);
+
 	private String[] columnNames = {"Task", "Due Date", "Completed?"};
 
 	/*
@@ -31,6 +43,7 @@ public class TaskList extends AbstractTableModel {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		startUp();
 	}
 
 	/*
@@ -198,8 +211,8 @@ public class TaskList extends AbstractTableModel {
 				if(rep == Repeat.NONE) {
 					//remove(temp);
 					rem.add(temp);
-				//If task repeats ever x days, add x days to current
-				//date and set that as task's new due date
+					//If task repeats ever x days, add x days to current
+					//date and set that as task's new due date
 				} else if(rep == Repeat.NUMDAY) {
 					GregorianCalendar cal = new GregorianCalendar();
 					Date date = new Date();
@@ -207,10 +220,10 @@ public class TaskList extends AbstractTableModel {
 					cal.add(Calendar.DATE, temp.getDaysBetween());
 					temp.setDate(cal);
 					temp.setCompleted(false);
-				//If task repeats on specific weekdays, keep adding 1
-				//to task's due date until the date of the due date 
-				//matches one of the days of the week it's supposed
-				//to repeat on
+					//If task repeats on specific weekdays, keep adding 1
+					//to task's due date until the date of the due date 
+					//matches one of the days of the week it's supposed
+					//to repeat on
 				} else if(rep == Repeat.SPDAY) {
 					GregorianCalendar cal = temp.getDate();
 					do {
@@ -227,11 +240,97 @@ public class TaskList extends AbstractTableModel {
 			tasks.remove(temp);
 	}
 
-	//	@Override
-	//	public void tableChanged(TableModelEvent e) {
-	//		if(e.getSource().getClass()==Boolean.class){
-	//			getSelectedRow().
-	//		}
-	//			
-	//	}
+	/*
+	 *Makes program run at startup by editing windows registry
+	 */
+	private void startUp() {
+		//		try {
+		//			WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, 
+		//					"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
+		//					"java -jar ToDoList v1.00.jar");
+		//		} catch (IllegalArgumentException | IllegalAccessException
+		//				| InvocationTargetException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
+		String fileName = "ToDoList.jar";
+		//		String filePath = "%appdata%\\Microsoft\\Windows\\Start Menu\\"
+		//				+ "Programs\\Startup\\ToDoList.bat";
+		String info = "start \"\" \"" + System.getProperty(
+				"user.dir") + "\\" + fileName + "\"" + "\n" + "exit";
+		try {
+			Scanner fileReader = new Scanner(startup);
+			while(fileReader.hasNext()){
+				String temp = fileReader.nextLine();
+			}
+//			FileInputStream fis = new FileInputStream(startup);
+//			ObjectInputStream is = new ObjectInputStream(fis);
+//			String temp = (String) is.readObject();
+//			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				startup.delete();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			} finally {
+				PrintWriter out = null;
+				try {
+					out = new PrintWriter(new BufferedWriter(new 
+							FileWriter(startup)));
+					out.println(info);
+					out.close();
+				}
+				catch (IOException e2) {
+					e.printStackTrace();
+				}
+			}
+		}
+		//		String value = "\"javaw -jar " + System.getProperty(
+		//				"user.dir") + "\\ToDoList v1.00.jar\"";
+		//		String valueOld = "";
+		//		String name = "ToDoList v1.00.jar";
+		//		String nameOld = "";
+		//		try {
+		//			FileInputStream fis = new FileInputStream(startup);
+		//			ObjectInputStream is = new ObjectInputStream(fis);
+		//			valueOld = (String) is.readObject();
+		//			nameOld = (String) is.readObject();
+		//			is.close();
+		//		}
+		//		catch (Exception e) {
+		//			//JOptionPane.showMessageDialog(null, "Couldn't do startup1");
+		//			e.printStackTrace();
+		//		}
+		//		if(!valueOld.equals(value)) {
+		//			try {
+		//				try {
+		//					WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, 
+		//							"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
+		//							"java -jar " + nameOld);
+		//				} catch (IllegalArgumentException | IllegalAccessException
+		//						| InvocationTargetException e) {
+		//					// TODO Auto-generated catch block
+		//					e.printStackTrace();
+		//				}
+		//				startup.delete();
+		//				FileOutputStream fos = new FileOutputStream(startup);
+		//				ObjectOutputStream os = new ObjectOutputStream(fos);
+		//				os.writeObject(value);
+		//				os.writeObject(name);
+		//				os.close();
+		//				try {
+		//					WinRegistry.writeStringValue(
+		//							WinRegistry.HKEY_CURRENT_USER, 
+		//							"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
+		//							"java -jar ToDoList v1.00.jar", value);
+		//				} catch (Exception e2) {
+		//					JOptionPane.showMessageDialog(null, "Couldn't do startup2");
+		//				}
+		//			}
+		//			catch (IOException e2) {
+		//				JOptionPane.showMessageDialog(null, "Couldn't do startup3");
+		//			}
+		//		}
+	}
 }

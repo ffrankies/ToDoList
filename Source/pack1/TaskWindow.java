@@ -80,7 +80,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 		//Creates the transparent panel
 		textBoxes = new JPanel();
 		textBoxes.setBackground(bckg);
-		//textBoxes.setBorder(new JTextField().getBorder());
 		textBoxes.setLayout(new BoxLayout(textBoxes, BoxLayout.Y_AXIS));
 
 		//Adds title to taskWindow
@@ -106,7 +105,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 		name = new JTextField(task.getTaskName(),15);
 		((AbstractDocument) name.getDocument()).setDocumentFilter(
 				new DocumentSizeFilter(23));
-		//name.setFont(font);
 		setupTextField(name);
 		namePanel.add(name);
 		textBoxes.add(namePanel);
@@ -125,9 +123,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 
 		//Instantiates the repeat textfield
 		options = new ArrayList<String>();
-		//{"None", "Every x days", "Specific Days"};
 		options.add("None");
-		options.add("Every x days");
+		options.add("At intervals");
 		options.add("Specific days");
 		repeatType = new MyChooser(options);
 		repeatType.getLeft().addActionListener(this);
@@ -314,10 +311,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		labelP.add(new JLabel("Due date:", JLabel.CENTER));
 		labelP.getComponent(0).setFont(font);
 		noneP.add(labelP);
-
-		//setupChooserP();
 		noneP.add(chooserP);
-		//noneP.setVisible(true);
 	}
 
 	private void setupChooserP() {
@@ -348,7 +342,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 		mm = new MyChooser(1,12);
 		mm.getLeft().addActionListener(this);
 		mm.getRight().addActionListener(this);
-		//System.out.println(cal.get(Calendar.MONTH));
 		mm.setText(cal.get(Calendar.MONTH)+1);
 		mm.addFont(font);
 		dd = new MyChooser(1,31);
@@ -390,27 +383,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 		labelP.setOpaque(false);
 		labelP.add(new JLabel("Starting from:", JLabel.CENTER));
 		numdayP.add(labelP);
-
-		//		chooserP = new JPanel();
-		//		chooserP.setOpaque(false);
-		//		chooserP.setLayout(new GridBagLayout());
-		//		GridBagConstraints c = new GridBagConstraints();
-		//		c.gridx = 0;
-		//		c.gridy = 0;
-		//		chooserP.add(new JLabel("Month", JLabel.CENTER),c);
-		//		c.gridx = 1;
-		//		chooserP.add(new JLabel("Day", JLabel.CENTER),c);
-		//		c.gridx = 2;
-		//		chooserP.add(new JLabel("Year", JLabel.CENTER),c);
-		//		c.gridx = 0;
-		//		c.gridy = 1;
-		//		MyChooser mm2 = mm;
-		//		chooserP.add(mm2,c);
-		//		c.gridx = 1;
-		//		chooserP.add(dd,c);
-		//		c.gridx = 2;
-		//		chooserP.add(yyyy,c);
-		//		numdayP.add(chooserP);
 	}
 
 	private void setupWeekdayP() {
@@ -428,7 +400,6 @@ public class TaskWindow extends JDialog implements ActionListener{
 		buttons = new JRadioButton[7];
 		String[] daysStrs = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri",
 				"Sat"};
-//		this.daysStrs = daysStrs;
 		for(int i = 0; i < buttons.length; i++) {
 			buttons[i] = new JRadioButton(daysStrs[i]);
 			buttons[i].setBackground(trans);
@@ -472,11 +443,5 @@ public class TaskWindow extends JDialog implements ActionListener{
 			else
 				dd.changeMax(31);
 	}
-	
-//	private String getDay(int day) {
-//		String[] week = {"Sun", "Mon", "Tue", "Tue", "Wed", "Thu", 
-//				"Fri", "Sat"};
-//		return week[day-1];
-//	}
 
 }
