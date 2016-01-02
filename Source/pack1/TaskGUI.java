@@ -48,8 +48,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
 
-//		private final SimpleDateFormat fmt = 
-//				new SimpleDateFormat("MM/dd/yyyy");
+	//		private final SimpleDateFormat fmt = 
+	//				new SimpleDateFormat("MM/dd/yyyy");
 	//SimpleDateFormat format = SimpleDateFormat.SHORT;
 
 	//Colors used in the program
@@ -61,9 +61,13 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private final Color selectDue = Color.PINK;
 
 	private final Font font = new Font("Cooper Black", Font.PLAIN, 15);
-	
+
 	private ImageIcon closeI, closeIPr, addI, addIPr, editI, editIPr, 
 	deleteI, deleteIPr, inc, dec;
+
+	private ImageIcon check;
+
+	private ImageIcon uncheck;
 
 	public TaskGUI() {
 
@@ -87,16 +91,16 @@ public class TaskGUI extends JFrame implements ActionListener {
 				else
 					return "";
 			}
-			
+
 			@Override
-            public JToolTip createToolTip() {
-                JToolTip toolTip = super.createToolTip();
-                toolTip.setBackground(select);
-                toolTip.setForeground(dark);
-                toolTip.setBorder(BorderFactory.createEmptyBorder());
-                    return toolTip;
-            }
-			
+			public JToolTip createToolTip() {
+				JToolTip toolTip = super.createToolTip();
+				toolTip.setBackground(select);
+				toolTip.setForeground(dark);
+				toolTip.setBorder(BorderFactory.createEmptyBorder());
+				return toolTip;
+			}
+
 		};
 		table.setShowGrid(false);
 		table.setBorder(null);
@@ -114,7 +118,9 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.getColumnModel().getColumn(0).setCellRenderer(cell);
 		table.getColumnModel().getColumn(1).setCellRenderer(cell);
 		CheckBoxRenderer ren = new CheckBoxRenderer();
+		CustomBooleanCellEditor ed = new CustomBooleanCellEditor();
 		table.getColumnModel().getColumn(2).setCellRenderer(ren);
+		table.getColumnModel().getColumn(2).setCellEditor(ed);
 
 		/* Prevents more than one task from being selected */
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -128,7 +134,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		
+
 		//Changes colors of scrollPane's scrollBar
 		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI()
 		{   
@@ -166,7 +172,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 			}
 
 		});
-		
+
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		//Instantiating buttons
@@ -190,7 +196,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		edit.setIcon(editI);
 		edit.setPressedIcon(editIPr);
 		setButton(edit);
-		
+
 		JPanel closeP = new JPanel();
 		closeP.setLayout(new FlowLayout());
 		closeP.setOpaque(false);
@@ -253,8 +259,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 		Rectangle rect = 
 				defaultScreen.getDefaultConfiguration().getBounds();
 		setSize(320,(int) rect.getMaxY());
-//		if(scrollPane.getVerticalScrollBar().isVisible())
-//			setSize(320,getHeight());
+		//		if(scrollPane.getVerticalScrollBar().isVisible())
+		//			setSize(320,getHeight());
 		int x = (int) rect.getMaxX() - this.getWidth();
 		int y = 0;
 		setLocation(x,y);
@@ -285,7 +291,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		}
 		taskModel.save();
 		scrollPane.repaint();
-		
+
 		if(button == close) {
 			taskModel.removeCompleted();
 			taskModel.save();
@@ -328,74 +334,124 @@ public class TaskGUI extends JFrame implements ActionListener {
 		public Component getTableCellRendererComponent(JTable table, 
 				Object value, boolean isSelected, boolean hasFocus, 
 				int row, int column) {
-			
+
 			Date date = new Date();
 			Date dueD = taskModel.getTask(row).getDate().getTime();
-			
+
 			if(isSelected)
-	        	if(date.after(dueD))
-	        		this.setBackground(selectDue);
-	        	else
-	        		this.setBackground(select);
-	        else
-	        	if(date.after(dueD))
-	        		this.setBackground(due);
-	        	else
-	        		this.setBackground(bckg);
+				if(date.after(dueD))
+					this.setBackground(selectDue);
+				else
+					this.setBackground(select);
+			else
+				if(date.after(dueD))
+					this.setBackground(due);
+				else
+					this.setBackground(bckg);
 			setSelected((Boolean)value);
+			if(isSelected())
+				setIcon(check);
+			else
+				setIcon(uncheck);
 			return this;
 		}
 	}
 	
+	public class CustomBooleanCellEditor extends AbstractCellEditor 
+	implements TableCellEditor{
+
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private JCheckBox editor;
+
+	    public CustomBooleanCellEditor() {
+	        editor = new JCheckBox();
+	        editor.setHorizontalAlignment(JLabel.CENTER);
+	        editor.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					fireEditingStopped();
+				}
+	        	
+	        });
+	        editor.setPressedIcon(check);
+	    }
+
+	    @Override
+	    public Component getTableCellEditorComponent(JTable table, 
+	    		Object value, boolean isSelected, int row, int column) {
+	        if (value instanceof Boolean) {
+	            boolean selected = (boolean) value;
+	            editor.setSelected(selected);
+	        }
+	        
+	        if(isSelected)
+	        	editor.setIcon(check);
+	        else
+	        	editor.setIcon(uncheck);
+	        //fireEditingStopped();
+	        return editor;
+	    }
+
+	    @Override
+	    public Object getCellEditorValue() {
+	        return editor.isSelected();
+	    }
+
+	}
+
 	/*
 	 * Allows me to edit how the text is displayed in the table
 	 */
 	public class MyCellRenderer  extends JTextPane 
 	implements TableCellRenderer {
 
-	    /**
+		/**
 		 * Default serial ID
 		 */
 		private static final long serialVersionUID = 1L;
 
 		@Override
-	    public Component getTableCellRendererComponent(
-	            JTable table,
-	            Object value,
-	            boolean isSelected,
-	            boolean hasFocus,
-	            int row,
-	            int column) {
-	        this.setText((String)value);
-	        //this.setWrapStyleWord(true);            
-	     //   this.setLineWrap(true);  
-	        //^^^^^could be useful if I choose to change the way I render this
-	        this.setFont(font);
-	        Insets i = this.getInsets();
-	        int fontHeight = this.getFontMetrics(this.getFont()).getHeight();         
-	        int height = fontHeight * 2;            
-	        table.setRowHeight(row, height);
-	        int vert = 6;
-	        this.setMargin(new Insets(vert,i.left,vert,i.right));
-	        
-	        Date date = new Date();
+		public Component getTableCellRendererComponent(
+				JTable table,
+				Object value,
+				boolean isSelected,
+				boolean hasFocus,
+				int row,
+				int column) {
+			this.setText((String)value);
+			//this.setWrapStyleWord(true);            
+			//   this.setLineWrap(true);  
+			//^^^^^could be useful if I choose to change the way I render this
+			this.setFont(font);
+			Insets i = this.getInsets();
+			int fontHeight = this.getFontMetrics(this.getFont()).getHeight();         
+			int height = fontHeight * 2;            
+			table.setRowHeight(row, height);
+			int vert = 6;
+			this.setMargin(new Insets(vert,i.left,vert,i.right));
+
+			Date date = new Date();
 			Date dueD = taskModel.getTask(row).getDate().getTime();
-			
+
 			if(isSelected)
-	        	if(date.after(dueD))
-	        		this.setBackground(selectDue);
-	        	else
-	        		this.setBackground(select);
-	        else
-	        	if(date.after(dueD))
-	        		this.setBackground(due);
-	        	else
-	        		this.setBackground(bckg);
-	        return this;
-	    }
+				if(date.after(dueD))
+					this.setBackground(selectDue);
+				else
+					this.setBackground(select);
+			else
+				if(date.after(dueD))
+					this.setBackground(due);
+				else
+					this.setBackground(bckg);
+			return this;
+		}
 
 	}
-	
+
 	/*
 	 * Loads icons in use
 	 */
@@ -410,8 +466,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 		deleteIPr = loadImage("\\Resources\\RemovePr.png"); 
 		inc = loadImage("\\Resources\\Inc.png");
 		dec = loadImage("\\Resources\\Dec.png");
+		check = loadImage("\\Resources\\Check.png");
+		uncheck = loadImage("\\Resources\\Uncheck.png");
 	}
-	
+
 	/*
 	 * Converts png images to imageIcons to be used for buttons
 	 */
@@ -424,7 +482,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		return image;
 
 	}
-	
+
 	/*
 	 * Disables button opacity and borders, so the buttons correctly
 	 * display images and nothing else.
@@ -437,5 +495,5 @@ public class TaskGUI extends JFrame implements ActionListener {
 		button.setBorderPainted(false);
 		button.setContentAreaFilled(false);
 	}
-	
+
 }
