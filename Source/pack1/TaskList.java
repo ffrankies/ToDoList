@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
+
+import javax.swing.JOptionPane;
 //import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
@@ -23,11 +25,14 @@ public class TaskList extends AbstractTableModel {
 
 	private ArrayList <Task> tasks;
 
-	private File file = new File ("taskList");
+	private String tasksPath = "C:\\Users\\" + 
+			System.getProperty("user.name") + "\\Tasks\\";
 
 	private String filePath = "C:\\Users\\" + 
 			System.getProperty("user.name") + "\\AppData\\Roaming\\Microsoft\\"
 			+ "Windows\\Start Menu\\Programs\\Startup\\ToDoList.bat";
+	
+	private File file = new File (tasksPath + "tasklist.sav");
 
 	private File startup = new File (filePath);
 
@@ -87,13 +92,16 @@ public class TaskList extends AbstractTableModel {
 	 */
 	public void save() {
 		try {
-			file.delete();
+			if(!new File(tasksPath).isDirectory())
+				new File(tasksPath).mkdirs();
+			if(file.isFile())
+				file.delete();
 			FileOutputStream fos = new FileOutputStream(file);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			os.writeObject(tasks);
 			os.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Didn't save");
 		}
 	}
 
@@ -288,50 +296,5 @@ public class TaskList extends AbstractTableModel {
 				}
 			}
 		}
-		//		String value = "\"javaw -jar " + System.getProperty(
-		//				"user.dir") + "\\ToDoList v1.00.jar\"";
-		//		String valueOld = "";
-		//		String name = "ToDoList v1.00.jar";
-		//		String nameOld = "";
-		//		try {
-		//			FileInputStream fis = new FileInputStream(startup);
-		//			ObjectInputStream is = new ObjectInputStream(fis);
-		//			valueOld = (String) is.readObject();
-		//			nameOld = (String) is.readObject();
-		//			is.close();
-		//		}
-		//		catch (Exception e) {
-		//			//JOptionPane.showMessageDialog(null, "Couldn't do startup1");
-		//			e.printStackTrace();
-		//		}
-		//		if(!valueOld.equals(value)) {
-		//			try {
-		//				try {
-		//					WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, 
-		//							"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
-		//							"java -jar " + nameOld);
-		//				} catch (IllegalArgumentException | IllegalAccessException
-		//						| InvocationTargetException e) {
-		//					e.printStackTrace();
-		//				}
-		//				startup.delete();
-		//				FileOutputStream fos = new FileOutputStream(startup);
-		//				ObjectOutputStream os = new ObjectOutputStream(fos);
-		//				os.writeObject(value);
-		//				os.writeObject(name);
-		//				os.close();
-		//				try {
-		//					WinRegistry.writeStringValue(
-		//							WinRegistry.HKEY_CURRENT_USER, 
-		//							"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
-		//							"java -jar ToDoList v1.00.jar", value);
-		//				} catch (Exception e2) {
-		//					JOptionPane.showMessageDialog(null, "Couldn't do startup2");
-		//				}
-		//			}
-		//			catch (IOException e2) {
-		//				JOptionPane.showMessageDialog(null, "Couldn't do startup3");
-		//			}
-		//		}
 	}
 }
