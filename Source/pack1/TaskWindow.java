@@ -22,6 +22,10 @@ public class TaskWindow extends JDialog implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/*
+	 * The list of tasks to which the task being created/edited 
+	 * belongs
+	 */
 	private TaskList list;
 
 	private JTextField name;
@@ -143,7 +147,21 @@ public class TaskWindow extends JDialog implements ActionListener{
 		setupNoneP();
 		setupNumdayP();
 		setupWeekdayP();
-		dLine = noneP;
+		//numdayP.add(chooserP);
+		//dLine = noneP;
+		if(task.getRepeat() == Repeat.NONE) {
+			dLine = noneP;
+			repeatType.setText(options.get(0));
+		}
+		if(task.getRepeat() == Repeat.NUMDAY) {
+			numdayP.add(chooserP);
+			dLine = numdayP;
+			repeatType.setText(options.get(1));
+		}
+		if(task.getRepeat() == Repeat.SPDAY) {
+			dLine = weekdayP;
+			repeatType.setText(options.get(2));
+		}
 		textBoxes.add(dLine);
 
 		//Adds spacing between textBoxes and edge of TaskWindow
@@ -283,12 +301,15 @@ public class TaskWindow extends JDialog implements ActionListener{
 							if(buttons[i].isSelected())
 								task.getWeekdays().add(i+1);
 						}
-						dueDate = task.getDate();
+						//task.setDate(new GregorianCalendar(
+						//		TimeZone.getTimeZone("EST")));
+						Task temp = new Task();
+						dueDate = temp.getDate();
 						do {
 							dueDate.add(Calendar.DATE, 1);
 						}
 						while(!task.getWeekdays().contains(
-								cal.get(Calendar.DAY_OF_WEEK)));
+								dueDate.get(Calendar.DAY_OF_WEEK)));
 						task.setDate(dueDate);
 					}
 			list.add(task);
@@ -371,11 +392,13 @@ public class TaskWindow extends JDialog implements ActionListener{
 		JPanel dayP = new JPanel();
 		dayP.setOpaque(false);
 		dayP.add(new JLabel("Task repeats every "));
-		days = new MyChooser(0,30);
+		days = new MyChooser(1,30);
 		days.getLeft().addActionListener(this);
 		days.getRight().addActionListener(this);
+		days.setText(task.getDaysBetween());
+		days.addFont(font);
 		dayP.add(days);
-		dayP.add(new JLabel(" days."));
+		dayP.add(new JLabel(" day(s)."));
 
 		numdayP.add(dayP);
 
@@ -408,6 +431,8 @@ public class TaskWindow extends JDialog implements ActionListener{
 			buttonsP.add(buttons[i]);
 		}
 		weekdayP.add(buttonsP);
+		for(int i: task.getWeekdays())
+			buttons[i-1].setSelected(true);
 	}
 
 	public boolean getCloseStatus() {

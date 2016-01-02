@@ -198,7 +198,6 @@ public class TaskList extends AbstractTableModel {
 			//return tasks.get(row).getDate().getTime();
 			return DateFormat.getDateInstance(DateFormat.SHORT).format(
 					tasks.get(row).getDate().getTime());
-			//return "ABC";
 		case 2:
 			return tasks.get(row).isCompleted();
 		default:
@@ -250,20 +249,11 @@ public class TaskList extends AbstractTableModel {
 	}
 
 	/*
-	 *Makes program run at startup by editing windows registry
+	 *Makes program run at startup by creating batch file in startup
+	 *directory of current user
 	 */
 	private void startUp() {
-		//		try {
-		//			WinRegistry.deleteValue(WinRegistry.HKEY_CURRENT_USER, 
-		//					"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
-		//					"java -jar ToDoList v1.00.jar");
-		//		} catch (IllegalArgumentException | IllegalAccessException
-		//				| InvocationTargetException e) {
-		//			e.printStackTrace();
-		//		}
 		String fileName = "ToDoList.jar";
-		//		String filePath = "%appdata%\\Microsoft\\Windows\\Start Menu\\"
-		//				+ "Programs\\Startup\\ToDoList.bat";
 		String info = "start \"\" \"" + System.getProperty(
 				"user.dir") + "\\" + fileName + "\"" + "\n" + "exit";
 		try {
@@ -273,10 +263,6 @@ public class TaskList extends AbstractTableModel {
 				@SuppressWarnings("unused")
 				String temp = fileReader.nextLine();
 			}
-//			FileInputStream fis = new FileInputStream(startup);
-//			ObjectInputStream is = new ObjectInputStream(fis);
-//			String temp = (String) is.readObject();
-//			is.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {

@@ -52,35 +52,10 @@ public class Task implements Serializable{
 				"EST"));
 		this.rep = Repeat.NONE;
 		this.weekdays = new ArrayList<Integer>();
-		this.daysBetween = 0;
+		this.daysBetween = 1;
 		this.completed = false;
 		fmt.setLenient(false);
 	}
-	
-//	public Task(String taskName, String date, boolean important) {
-//		super();
-//		this.taskName = taskName;
-//		fmt.setLenient(false);
-//		this.dueDate = new GregorianCalendar();
-//		try {
-//			dueDate.setTime(fmt.parse(date));
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		this.important = important;
-//		this.completed = false;
-//		
-//	}
-	
-//	public Task(String taskName, Date date, boolean important) {
-//		super();
-//		this.taskName = taskName;
-//		this.dueDate.setTime(date);
-//		this.important = important;
-//		this.completed = false;
-//		fmt.setLenient(false);
-//	}
 	
 	/**
 	 * Converts the task to a readable string
