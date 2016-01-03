@@ -23,19 +23,38 @@ public class TaskList extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/*
+	 * Arraylist containing tasks
+	 */
 	private ArrayList <Task> tasks;
 
+	/*
+	 * Path to the directory where tasklist will be stored
+	 */
 	private String tasksPath = "C:\\Users\\" + 
 			System.getProperty("user.name") + "\\Tasks\\";
 
+	/*
+	 * Path to the .bat file in the startup folder of windows
+	 */
 	private String filePath = "C:\\Users\\" + 
-			System.getProperty("user.name") + "\\AppData\\Roaming\\Microsoft\\"
-			+ "Windows\\Start Menu\\Programs\\Startup\\ToDoList.bat";
+			System.getProperty("user.name") + "\\AppData\\Roaming\\"
+					+ "Microsoft\\Windows\\Start Menu\\Programs\\"
+					+ "Startup\\ToDoList.bat";
 	
+	/*
+	 * Save file containing list of tasks
+	 */
 	private File file = new File (tasksPath + "tasklist.sav");
 
+	/*
+	 * .bat file that makes program run on startup
+	 */
 	private File startup = new File (filePath);
 
+	/*
+	 * Column names for JTable (practically, unused)
+	 */
 	private String[] columnNames = {"Task", "Due Date", "Completed?"};
 
 	/*
@@ -253,16 +272,23 @@ public class TaskList extends AbstractTableModel {
 	 *directory of current user
 	 */
 	private void startUp() {
-		String fileName = "ToDoList.jar";
+		
+		//Name of executable file
+		String fileName = "ToDoList.exe";
+		
+		//Path to executable file
 		String info = "start \"\" \"" + System.getProperty(
 				"user.dir") + "\\" + fileName + "\"" + "\n" + "exit";
+		
 		try {
-			@SuppressWarnings("resource")
+			//Checks if the .bat file exists, and makes sure it's not
+			//empty
 			Scanner fileReader = new Scanner(startup);
 			while(fileReader.hasNext()){
 				@SuppressWarnings("unused")
 				String temp = fileReader.nextLine();
 			}
+			fileReader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
@@ -270,6 +296,7 @@ public class TaskList extends AbstractTableModel {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {
+				//Writes new .bat file
 				PrintWriter out = null;
 				try {
 					out = new PrintWriter(new BufferedWriter(new 

@@ -28,16 +28,34 @@ public class TaskWindow extends JDialog implements ActionListener{
 	 */
 	private TaskList list;
 
-	private JTextField name;
+	/*
+	 * Textfield where user types in a short description of the task
+	 */
+	private JTextField description;
 
+	/*
+	 * TextArea where user types in details for the task
+	 */
 	private JTextArea details;
 
+	/*
+	 * Button that saves the task to the tasklist
+	 */
 	private JButton okButton;
 
+	/*
+	 * Button that cancels changes made to the task
+	 */
 	private JButton cancelButton;
 
+	/*
+	 * Tells whether or not the window should close
+	 */
 	private boolean closeStatus;
 
+	/*
+	 * Colors used in the taskwindow
+	 */
 	private final Color trans = new Color(1,1,1,0.55f);
 	private final Color bckg = Color.WHITE;
 	private final Color dark = Color.BLACK;
@@ -47,33 +65,64 @@ public class TaskWindow extends JDialog implements ActionListener{
 	public static final boolean OK = true;
 	public static final boolean CANCEL = false;
 
+	/*
+	 * The task being created/edited
+	 */
 	private Task task;
 
+	/*
+	 * Panels containing GUI components
+	 */
 	private JPanel chooserP, textBoxes, dLine, noneP, numdayP, weekdayP;
 
+	/*
+	 * X and Y positions of mouse pointer
+	 */
 	protected int pX;
-
 	protected int pY;
 
+	/*
+	 * MyChooser objects that allow the user to select the type of 
+	 * repeat for the task, the due date for the task, and the 
+	 * number of days between a task is completed and when it's due 
+	 * again
+	 */
 	private MyChooser repeatType, dd, mm, yyyy, days;
 
+	/*
+	 * Radio buttons for selecting the days on which the task is due
+	 */
 	private JRadioButton[] buttons;
 
+	/*
+	 * Contains string versions of the repeat types available
+	 */
 	private ArrayList<String> options;
 
+	/*
+	 * Calendar object - obtains task's due date, used in instantiating
+	 * other components
+	 */
 	private GregorianCalendar cal;
 	
+	/*
+	 * The font used
+	 */
 	private final Font font = new Font("Cooper Black", Font.PLAIN, 13);
 	//private final Font small = new Font("Arial", Font.PLAIN, 12);
 
+	/*
+	 * Icons for the cancel and ok buttons (cancel button used close
+	 * icon)
+	 */
 	private ImageIcon closeI;
-
 	private ImageIcon closeIPr;
-
 	private ImageIcon okI;
-
 	private ImageIcon okIPr;
 
+	/*
+	 * Default constructor for TaskWindow
+	 */
 	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
 		this.task = task;
 		this.list = list;
@@ -116,11 +165,11 @@ public class TaskWindow extends JDialog implements ActionListener{
 		namePanel.add(new JLabel("Description:"));
 		namePanel.getComponent(0).setFont(font);
 		namePanel.setOpaque(false);
-		name = new JTextField(task.getTaskName(),15);
-		((AbstractDocument) name.getDocument()).setDocumentFilter(
+		description = new JTextField(task.getTaskName(),15);
+		((AbstractDocument) description.getDocument()).setDocumentFilter(
 				new DocumentSizeFilter(23));
-		setupTextField(name);
-		namePanel.add(name);
+		setupTextField(description);
+		namePanel.add(description);
 		textBoxes.add(namePanel);
 
 		//Instantiates the description textfield
@@ -292,7 +341,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 			if(list.getTasks().contains(task))
 				list.remove(task);
 			
-			task.setTaskName(name.getText());
+			task.setTaskName(description.getText());
 			task.setDescription(details.getText());
 			String repeat = repeatType.getText();
 			GregorianCalendar dueDate = new GregorianCalendar();

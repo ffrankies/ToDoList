@@ -68,11 +68,17 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private ImageIcon check;
 
 	private ImageIcon uncheck;
+	
+	private ImageIcon icon;
 
 	public TaskGUI() {
 
 		taskModel = new TaskList();
 		loadIcons();
+		
+		setTitle("ToDoList");
+		setIconImage(icon.getImage());
+		
 		table = new JTable(taskModel) {
 			/**
 			 *Default serial ID for the 
@@ -468,6 +474,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		dec = loadImage("\\Resources\\Dec.png");
 		check = loadImage("\\Resources\\Check.png");
 		uncheck = loadImage("\\Resources\\Uncheck.png");
+		icon  = loadImage("\\Resources\\Icon.png");
 	}
 
 	/*
