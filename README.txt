@@ -1,5 +1,5 @@
 -----ToDoList-----
-Version 1.0.0.0
+Version 1.0.1.0
 Created by: Frank Derry Wanye, 2016.
 
 This is a to-do-list program, intended to be used as a reminder
@@ -33,3 +33,6 @@ Contact information:
 If you have any suggestions, complaints or questions, you can send me an e-mail at wanyef@mail.gvsu.edu
 
 Credit goes to MadProgrammer from StackOverflow for the base code used in the CustomBooleanCellEditor class.
+
+Known bugs:
+- Repaint problem when task is deleted – fixed
