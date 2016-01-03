@@ -484,9 +484,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private ImageIcon loadImage(String imageName) {
 
 		ImageIcon image = null;
-		image = new ImageIcon("C:\\Users\\Frank\\"
-				+ "workspace\\ToDoList\\Source\\pack1\\"
-				+ imageName);
+		image = new ImageIcon(System.getProperty(
+				"user.dir") + imageName);
 		return image;
 
 	}
