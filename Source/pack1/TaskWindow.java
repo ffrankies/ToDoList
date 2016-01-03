@@ -66,9 +66,19 @@ public class TaskWindow extends JDialog implements ActionListener{
 	private final Font font = new Font("Cooper Black", Font.PLAIN, 13);
 	//private final Font small = new Font("Arial", Font.PLAIN, 12);
 
+	private ImageIcon closeI;
+
+	private ImageIcon closeIPr;
+
+	private ImageIcon okI;
+
+	private ImageIcon okIPr;
+
 	public TaskWindow(JFrame paOccupy, Task task, TaskList list) {
 		this.task = task;
 		this.list = list;
+		
+		loadIcons();
 
 		//setTitle("Create a new task");
 		closeStatus = CANCEL;
@@ -174,8 +184,14 @@ public class TaskWindow extends JDialog implements ActionListener{
 		JPanel buttons = new JPanel();
 		buttons.setOpaque(false);
 
-		okButton = new JButton("OK");
-		cancelButton = new JButton("Cancel");
+		okButton = new JButton();
+		okButton.setIcon(okI);
+		okButton.setPressedIcon(okIPr);
+		setButton(okButton);
+		cancelButton = new JButton();
+		setButton(cancelButton);
+		cancelButton.setIcon(closeI);
+		cancelButton.setPressedIcon(closeIPr);
 
 		buttons.add(okButton);
 		buttons.add(cancelButton);
@@ -467,6 +483,42 @@ public class TaskWindow extends JDialog implements ActionListener{
 				dd.changeMax(30);
 			else
 				dd.changeMax(31);
+	}
+	
+	/*
+	 * Loads icons in use
+	 */
+	private void loadIcons() {
+		closeI = loadImage("\\Resources\\Close.png");
+		closeIPr = loadImage("\\Resources\\ClosePr.png");
+		okI = loadImage("\\Resources\\Ok.png");
+		okIPr = loadImage("\\Resources\\OkPr.png"); 
+	}
+
+	/*
+	 * Converts png images to imageIcons to be used for buttons
+	 */
+	private ImageIcon loadImage(String imageName) {
+
+		ImageIcon image = null;
+		image = new ImageIcon("C:\\Users\\Frank\\"
+				+ "workspace\\ToDoList\\Source\\pack1\\"
+				+ imageName);
+		return image;
+
+	}
+
+	/*
+	 * Disables button opacity and borders, so the buttons correctly
+	 * display images and nothing else.
+	 */
+	private void setButton(JButton button) {
+		button.setOpaque(false);
+		button.addActionListener(this);
+		button.setFocusPainted(false);
+		button.setFocusable(false);
+		button.setBorderPainted(false);
+		button.setContentAreaFilled(false);
 	}
 
 }
