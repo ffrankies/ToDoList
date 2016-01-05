@@ -48,9 +48,10 @@ public class TaskGUI extends JFrame implements ActionListener {
 			"The due date for the task.",
 	"Check this box once you have completed the task."};
 
-	//		private final SimpleDateFormat fmt = 
-	//				new SimpleDateFormat("MM/dd/yyyy");
-	//SimpleDateFormat format = SimpleDateFormat.SHORT;
+	/*
+	 * String containing directory of .exe file
+	 */
+	private String directory;
 
 	//Colors used in the program
 	private final Color trans = new Color(1,1,1,0.55f);
@@ -74,6 +75,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 	public TaskGUI() {
 
 		taskModel = new TaskList();
+		
+		directory = taskModel.getDir();
 		loadIcons();
 		
 		setTitle("ToDoList");
@@ -117,8 +120,8 @@ public class TaskGUI extends JFrame implements ActionListener {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table.getColumnModel().getColumn(0).setMinWidth(195);
 		table.getColumnModel().getColumn(1).setMinWidth(50);
-		table.getColumnModel().getColumn(2).setMinWidth(18);
-		table.getColumnModel().getColumn(2).setMaxWidth(18);
+		table.getColumnModel().getColumn(2).setMinWidth(20);
+		table.getColumnModel().getColumn(2).setMaxWidth(20);
 		table.setTableHeader(null);
 		MyCellRenderer cell = new MyCellRenderer();
 		table.getColumnModel().getColumn(0).setCellRenderer(cell);
@@ -264,7 +267,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 		GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
 		Rectangle rect = 
 				defaultScreen.getDefaultConfiguration().getBounds();
-		setSize(320,(int) rect.getMaxY());
+		setSize(310,(int) rect.getMaxY());
 		//		if(scrollPane.getVerticalScrollBar().isVisible())
 		//			setSize(320,getHeight());
 		int x = (int) rect.getMaxX() - this.getWidth();
@@ -336,6 +339,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 
 		CheckBoxRenderer() {
 			setHorizontalAlignment(JLabel.CENTER);
+			this.setMargin(new Insets(0,0,0,0));
 		}
 
 		public Component getTableCellRendererComponent(JTable table, 
@@ -484,8 +488,7 @@ public class TaskGUI extends JFrame implements ActionListener {
 	private ImageIcon loadImage(String imageName) {
 
 		ImageIcon image = null;
-		image = new ImageIcon(System.getProperty(
-				"user.dir") + imageName);
+		image = new ImageIcon(directory + imageName);
 		return image;
 
 	}

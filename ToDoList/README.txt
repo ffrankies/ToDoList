@@ -1,5 +1,5 @@
 -----ToDoList-----
-Version 1.0.2.0
+Version 1.0.3.0
 Created by: Frank Derry Wanye, 2016.
 
 This is a to-do-list program, intended to be used as a reminder
@@ -36,4 +36,4 @@ Credit goes to MadProgrammer from StackOverflow for the base code used in the Cu
 
 Known bugs:
 - Repaint problem when task is deleted – fixed
-- Button icons didn’t load – fixed by repackaging the program
+- Button icons didn’t load – fixed by repackaging the program, and creating a new save file containing the directory of the executable (v1.03)

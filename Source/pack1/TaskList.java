@@ -45,17 +45,28 @@ public class TaskList extends AbstractTableModel {
 	/*
 	 * Save file containing list of tasks
 	 */
-	private File file = new File (tasksPath + "tasklist.sav");
+	private File taskFile = new File (tasksPath + "tasklist.sav");
 
 	/*
 	 * .bat file that makes program run on startup
 	 */
 	private File startup = new File (filePath);
+	
+	/*
+	 * Save file containing directory to .exe file
+	 */
+	private File dirFile = new File (tasksPath + "directory.sav");
 
 	/*
 	 * Column names for JTable (practically, unused)
 	 */
 	private String[] columnNames = {"Task", "Due Date", "Completed?"};
+	
+	/*
+	 * Contains the directory in which the .exe file and resources are 
+	 * located
+	 */
+	private String directory;
 
 	/*
 	 * Automatically loads saved tasks from taskList file
@@ -113,9 +124,9 @@ public class TaskList extends AbstractTableModel {
 		try {
 			if(!new File(tasksPath).isDirectory())
 				new File(tasksPath).mkdirs();
-			if(file.isFile())
-				file.delete();
-			FileOutputStream fos = new FileOutputStream(file);
+			if(taskFile.isFile())
+				taskFile.delete();
+			FileOutputStream fos = new FileOutputStream(taskFile);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			os.writeObject(tasks);
 			os.close();
@@ -132,7 +143,7 @@ public class TaskList extends AbstractTableModel {
 	public void load() {
 		tasks = new ArrayList<Task>();
 		try {
-			FileInputStream fis = new FileInputStream(file);
+			FileInputStream fis = new FileInputStream(taskFile);
 			ObjectInputStream is = new ObjectInputStream(fis);
 			tasks = (ArrayList <Task> ) is.readObject();
 			fireTableRowsInserted(0, tasks.size() - 1);
@@ -283,16 +294,25 @@ public class TaskList extends AbstractTableModel {
 		try {
 			//Checks if the .bat file exists, and makes sure it's not
 			//empty
-			Scanner fileReader = new Scanner(startup);
-			while(fileReader.hasNext()){
+			Scanner tasksReader = new Scanner(startup);
+			while(tasksReader.hasNext()){
 				@SuppressWarnings("unused")
-				String temp = fileReader.nextLine();
+				String temp = tasksReader.nextLine();
 			}
-			fileReader.close();
+			tasksReader.close();
+			//Checks if the directory file exists, and makes sure it's
+			//not empty
+			Scanner dirReader = new Scanner(dirFile);
+			while(dirReader.hasNext()){
+				directory = dirReader.nextLine();
+			}
+			dirReader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
+				//IF they exist but are empty, deletes the two files
 				startup.delete();
+				dirFile.delete();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			} finally {
@@ -305,9 +325,28 @@ public class TaskList extends AbstractTableModel {
 					out.close();
 				}
 				catch (IOException e2) {
-					e.printStackTrace();
+					e2.printStackTrace();
+				}
+				//Writes new directory file
+				PrintWriter out2 = null;
+				try {
+					directory = System.getProperty("user.dir");
+					out2 = new PrintWriter(new BufferedWriter(
+							new FileWriter(dirFile)));
+					out2.println(directory);
+					out2.close();
+				} catch (IOException e3) {
+					e3.printStackTrace();
 				}
 			}
 		}
+	}
+	
+	/*
+	 * Returns the directory string (directory of the .exe file when it
+	 * was first run)
+	 */
+	public String getDir() {
+		return directory;
 	}
 }

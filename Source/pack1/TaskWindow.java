@@ -119,6 +119,12 @@ public class TaskWindow extends JDialog implements ActionListener{
 	private ImageIcon closeIPr;
 	private ImageIcon okI;
 	private ImageIcon okIPr;
+	
+
+	/*
+	 * String containing directory of .exe file
+	 */
+	private String directory;
 
 	/*
 	 * Default constructor for TaskWindow
@@ -127,6 +133,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 		this.task = task;
 		this.list = list;
 		
+		directory = list.getDir();
 		loadIcons();
 
 		//setTitle("Create a new task");
@@ -550,8 +557,7 @@ public class TaskWindow extends JDialog implements ActionListener{
 	private ImageIcon loadImage(String imageName) {
 
 		ImageIcon image = null;
-		image = new ImageIcon(System.getProperty(
-				"user.dir") + imageName);
+		image = new ImageIcon(directory + imageName);
 		return image;
 
 	}
